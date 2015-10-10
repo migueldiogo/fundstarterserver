@@ -26,42 +26,22 @@ public class Connection extends Thread{
 
     @Override
     public void run() {
-        int maxAttempts = 3;
-        boolean accessAllowed = false;
-
-        for (int i = 0; i < maxAttempts && !accessAllowed; i++) {
-            if (i != 0)
-                sendMessageToClient("Username: ");
-            String clientUsername = readMessageFromClient();
-            sendMessageToClient("Password: ");
-            String clientPassword = readMessageFromClient();
-
-            // TODO accessAllowed = authenticateClient(clientUsername, clientPassword);
-
-            if (accessAllowed)
-                sendMessageToClient("Access Denied! Please try again.\nUsername:");
-            else if (accessAllowed && i < 3){
-                sendMessageToClient("Welcome to FundStarter, " + clientUsername + "!\n>>>");
-                // TODO Login login = new Login(Username);
-            }
-            else
-                System.exit(1);
-
-        }
 
         while(true) {
             String rawClientCommand = readMessageFromClient();
-            String commandResponse;
+            String commandResponse = "";
             try {
                 // TODO ClientCommand clientCommand = new ClientCommand(rawClientCommand);
                 // TODO clientCommand.run();
                 // TODO commandResponse = clientCommand.output();
             } catch (NotRecognizedCommandException e) {
                 commandResponse = "Not Recognized Command: " + e.getMessage();
+            } catch (OnlyForLoggedInUsersException e) {
+                commandResponse = "You must login to execute this kind of commands. Use the command 'login' or 'sign up'.";
+            } finally {
+                sendMessageToClient(commandResponse + "\n>>>");
             }
-            // TODO sendMessageToClient(commandResponse + "\n>>>");
         }
-
 
     }
 
@@ -88,9 +68,39 @@ public class Connection extends Thread{
         return message;
     }
 
-    private void fatalError() {
-        System.exit(1);
+
+    /**
+     * TODO Move to ClientCommand class.
+     */
+    private void loginRoutine() {
+        int maxAttempts = 3;
+        boolean accessAllowed = false;
+
+        for (int i = 0; i < maxAttempts && !accessAllowed; i++) {
+            if (i != 0)
+                sendMessageToClient("Username: ");
+            String clientUsername = readMessageFromClient();
+            sendMessageToClient("Password: ");
+            String clientPassword = readMessageFromClient();
+
+            // TODO accessAllowed = authenticateClient(clientUsername, clientPassword);
+
+            if (accessAllowed)
+                sendMessageToClient("Access Denied! Please try again.\nUsername:");
+            else if (accessAllowed && i < 3){
+                sendMessageToClient("Welcome to FundStarter, " + clientUsername + "!\n>>>");
+                // TODO Login login = new Login(Username);
+            }
+            else
+                System.exit(1);
+
+        }
     }
+
+
+
+
+
 }
 
 
