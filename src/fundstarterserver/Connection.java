@@ -40,14 +40,26 @@ public class Connection extends Thread{
 
             if (accessAllowed)
                 sendMessageToClient("Access Denied! Please try again.\nUsername:");
-            else {
+            else if (accessAllowed && i < 3){
                 sendMessageToClient("Welcome to FundStarter, " + clientUsername + "!\n>>>");
                 // TODO Login login = new Login(Username);
             }
+            else
+                System.exit(1);
+
         }
 
-        if (!accessAllowed) {
-            System.exit(1);
+        while(true) {
+            String rawClientCommand = readMessageFromClient();
+            String commandResponse;
+            try {
+                // TODO ClientCommand clientCommand = new ClientCommand(rawClientCommand);
+                // TODO clientCommand.run();
+                // TODO commandResponse = clientCommand.output();
+            } catch (NotRecognizedCommandException e) {
+                commandResponse = "Not Recognized Command: " + e.getMessage();
+            }
+            // TODO sendMessageToClient(commandResponse + "\n>>>");
         }
 
 
@@ -74,6 +86,10 @@ public class Connection extends Thread{
         }
 
         return message;
+    }
+
+    private void fatalError() {
+        System.exit(1);
     }
 }
 
