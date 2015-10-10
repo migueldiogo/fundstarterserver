@@ -11,8 +11,10 @@ public class Connection extends Thread{
     private Socket clientSocket;
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
+    private String usernameLoggedIn;
 
     public Connection(Socket clientSocket) {
+        usernameLoggedIn = null;
         try {
             this.clientSocket = clientSocket;
             inputStream = new DataInputStream(clientSocket.getInputStream());
@@ -28,29 +30,24 @@ public class Connection extends Thread{
     public void run() {
 
         while(true) {
-            String rawClientCommand = readMessageFromClient();
-            String commandResponse = "";
-            try {
-                // TODO ClientCommand clientCommand = new ClientCommand(rawClientCommand);
-                // TODO clientCommand.run();
-                // TODO commandResponse = clientCommand.output();
-            } catch (NotRecognizedCommandException e) {
-                commandResponse = "Not Recognized Command: " + e.getMessage();
-            } catch (OnlyForLoggedInUsersException e) {
-                commandResponse = "You must login to execute this kind of commands. Use the command 'login' or 'sign up'.";
-            } finally {
-                sendMessageToClient(commandResponse + "\n>>>");
-            }
+            handleClientCommand();
         }
 
     }
 
-
-    private void sendMessageToClient(String message) {
+    private void handleClientCommand() {
+        String rawClientCommand = readMessageFromClient();
+        String commandResponse = "";
         try {
-            outputStream.writeUTF(message);
-        } catch (IOException e) {
-            System.out.println("IO: " + e.getMessage());
+            // TODO ClientCommand clientCommand = new ClientCommand(rawClientCommand, usernameLoggedIn);
+            // TODO clientCommand.run();
+            // TODO commandResponse = clientCommand.output();
+        } catch (SignOutException e) {
+            usernameLoggedIn = null;
+            sendMessageToClient(commandResponse + "\n>>>");
+        } catch (ClientLeavingException e) {
+            sendMessageToClient(commandResponse);
+            System.exit(0);
         }
     }
 
@@ -68,10 +65,22 @@ public class Connection extends Thread{
         return message;
     }
 
+    private void sendMessageToClient(String message) {
+        try {
+            outputStream.writeUTF(message);
+        } catch (IOException e) {
+            System.out.println("IO: " + e.getMessage());
+        }
+    }
+
+
+
+
+
 
     /**
      * TODO Move to ClientCommand class.
-     */
+
     private void loginRoutine() {
         int maxAttempts = 3;
         boolean accessAllowed = false;
@@ -96,9 +105,7 @@ public class Connection extends Thread{
 
         }
     }
-
-
-
+     */
 
 
 }
