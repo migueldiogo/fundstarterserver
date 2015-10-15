@@ -1,5 +1,7 @@
 package fundstarterserver;
 
+import fundstarter.ServerMessage;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.InputMismatchException;
@@ -15,8 +17,8 @@ public class Connection extends Thread{
         usernameLoggedIn = null;
         try {
             this.clientSocket = clientSocket;
-            inputStream = new DataInputStream(clientSocket.getInputStream());
             outputStream = new ObjectOutputStream((clientSocket.getOutputStream()));
+            inputStream = new DataInputStream(clientSocket.getInputStream());
             this.start();
         } catch (IOException e){
             System.out.println("Connection: " + e.getMessage());
@@ -27,9 +29,7 @@ public class Connection extends Thread{
     @Override
     public void run() {
 
-        while(true) {
-            initiateMenuDrivenIOWithClient();
-        }
+        initiateMenuDrivenIOWithClient();
 
     }
 
@@ -44,14 +44,20 @@ public class Connection extends Thread{
 
         messageToClient.setContent(menuMain.toString());
         messageToClient.setRepeatAnswerToPrevious(false);
+
+
+
         int optionChosen = messageInteractionWithClient(messageToClient, menuMain);
 
+        /*
         switch (optionChosen) {
             case 1:
 
         }
+        */
 
     }
+
 
 
 
@@ -61,6 +67,7 @@ public class Connection extends Thread{
         Boolean inputValidation;
 
         do {
+
             sendMessageToClient(serverMessageAssociated);
             try {
                 rawOptionInput = inputStream.readUTF();

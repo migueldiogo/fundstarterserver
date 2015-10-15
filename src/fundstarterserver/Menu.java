@@ -31,7 +31,7 @@ public class Menu {
     public String toString() {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < optionsList.getSize(); i++) {
-            result.append(i + " - ");
+            result.append((i+1) + " - ");
             result.append(optionsList.get(i));
             result.append("\n");
         }
