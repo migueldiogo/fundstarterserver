@@ -45,16 +45,8 @@ public class Connection extends Thread{
         messageToClient.setContent(menuMain.toString());
         messageToClient.setRepeatAnswerToPrevious(false);
 
-
-
         int optionChosen = messageInteractionWithClient(messageToClient, menuMain);
 
-        /*
-        switch (optionChosen) {
-            case 1:
-
-        }
-        */
 
     }
 
@@ -116,60 +108,6 @@ public class Connection extends Thread{
             System.out.println("IO: " + e.getMessage());
         }
     }
-
-
-
-
-
-
-    /*
-    private void handleClientCommand() {
-        String rawClientCommand = readMessageFromClient();
-        String commandResponse = "";
-        try {
-            // TODO ClientCommand clientCommand = new ClientCommand(rawClientCommand, usernameLoggedIn);
-            // TODO clientCommand.run();
-            // TODO commandResponse = clientCommand.output();
-        } catch (SignOutException e) {
-            usernameLoggedIn = null;
-            sendMessageToClient(commandResponse + "\n>>>");
-        } catch (ClientLeavingException e) {
-            sendMessageToClient(commandResponse);
-            System.exit(0);
-        }
-    }
-    */
-
-
-    /**
-     * TODO Move to ClientCommand class.
-
-    private void loginRoutine() {
-        int maxAttempts = 3;
-        boolean accessAllowed = false;
-
-        for (int i = 0; i < maxAttempts && !accessAllowed; i++) {
-            if (i != 0)
-                sendMessageToClient("Username: ");
-            String clientUsername = readMessageFromClient();
-            sendMessageToClient("Password: ");
-            String clientPassword = readMessageFromClient();
-
-            // TODO accessAllowed = authenticateClient(clientUsername, clientPassword);
-
-            if (accessAllowed)
-                sendMessageToClient("Access Denied! Please try again.\nUsername:");
-            else if (accessAllowed && i < 3){
-                sendMessageToClient("Welcome to FundStarter, " + clientUsername + "!\n>>>");
-                // TODO Login login = new Login(Username);
-            }
-            else
-                System.exit(1);
-
-        }
-    }
-     */
-
 
 }
 
