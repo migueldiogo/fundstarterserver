@@ -14,12 +14,11 @@ public class Main {
             InetAddress alternativeServerAddress = InetAddress.getByName(args[0]);
 
             // behave like a secondary server first of all
-            Thread thread = new UDPSession(2, alternativeServerAddress);
-
+            Thread thread = new UDPSession(false, alternativeServerAddress);
             thread.join();
 
             // behave like a primary server
-            new UDPSession(1, alternativeServerAddress);
+            new UDPSession(true, alternativeServerAddress);
 
             int serverPort = 8100;
             ServerSocket listenSocket = new ServerSocket(serverPort);
