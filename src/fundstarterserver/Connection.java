@@ -36,16 +36,10 @@ public class Connection extends Thread{
     private void initiateMenuDrivenIOWithClient() {
         ServerMessage messageToClient = new ServerMessage();
 
-        Menu menuMain = new Menu();
-        menuMain.addOption("Login");
-        menuMain.addOption("Sign Up");
-        menuMain.addOption("Quit");
-        menuMain.setAnswerPrompt("Please enter your choice: ");
+        //messageToClient.setContent(menuMain.toString());
+        //messageToClient.setRepeatAnswerToPrevious(false);
 
-        messageToClient.setContent(menuMain.toString());
-        messageToClient.setRepeatAnswerToPrevious(false);
-
-        int optionChosen = messageInteractionWithClient(messageToClient, menuMain);
+        //int optionChosen = messageInteractionWithClient(messageToClient, menuMain);
 
 
     }
@@ -108,7 +102,23 @@ public class Connection extends Thread{
             System.out.println("IO: " + e.getMessage());
         }
     }
-
+/*
+    private void handleClientCommand() {
+        String rawClientCommand = readMessageFromClient();
+        ServerMessage commandResponse = new ServerMessage();
+        try {
+            // TODO ClientCommand clientCommand = new ClientCommand(rawClientCommand, usernameLoggedIn);
+            // TODO clientCommand.run();
+            // TODO commandResponse = clientCommand.getOutput();
+        } catch (SignOutException e) {
+            usernameLoggedIn = null;
+            //sendMessageToClient(commandResponse + "\n>>>");
+        } catch (ClientLeavingException e) {
+            sendMessageToClient(commandResponse);
+            System.exit(0);
+        }
+    }
+*/
 }
 
 

@@ -12,6 +12,13 @@ public class ServerMessage implements Serializable{
     private String content;
     private boolean repeatAnswerToPrevious;
 
+
+    public ServerMessage(ServerMessage serverMessageToCopy) {
+        this.errorMessageBefore = serverMessageToCopy.getErrorMessageBefore();
+        this.content = serverMessageToCopy.getContent();
+        this.repeatAnswerToPrevious = serverMessageToCopy.isRepeatAnswerToPrevious();
+    }
+
     public ServerMessage() {
         this.errorMessageBefore = "";
         this.content = "";
