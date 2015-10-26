@@ -21,6 +21,8 @@ public class Message implements Serializable{
         this.data = data;
     }
 
+    public Message() {
+    }
 
     public String getSendTo() {
         return sendTo;
@@ -52,5 +54,15 @@ public class Message implements Serializable{
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "sendTo='" + sendTo + '\'' +
+                ", sendFrom='" + sendFrom + '\'' +
+                ", text='" + text + '\'' +
+                ", data='" + data + '\'' +
+                '}';
     }
 }

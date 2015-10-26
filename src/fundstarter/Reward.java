@@ -43,4 +43,13 @@ public class Reward implements Serializable{
     public void setGiftName(String giftName) {
         this.giftName = giftName;
     }
+
+    @Override
+    public String toString() {
+        return "Reward{" +
+                "projectName='" + projectName + '\'' +
+                ", pledgeMin=" + pledgeMin +
+                ", giftName='" + giftName + '\'' +
+                '}';
+    }
 }

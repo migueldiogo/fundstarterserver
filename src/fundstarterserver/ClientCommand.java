@@ -63,17 +63,14 @@ public class ClientCommand {
             case "signup":
                 signUP();
                 break;
-            case "view messages":
-                viewMessages();
+            case "viewBalance":
+                viewBalance();
                 break;
-            case "view balance":
-                //viewBalance();
+            case "viewRewards":
+                viewRewards();
                 break;
-            case "view rewards":
-               // viewRewards();
-                break;
-            case "sendreward":
-                //sendRewards();
+            case "sendReward":
+                sendReward();
                 break;
             case "listInProgress":
                 listInProgress();
@@ -87,14 +84,14 @@ public class ClientCommand {
             case "pledge":
                 pledge();
                 break;
-            case "messages":
-                //messages();
+            case "viewMessages":
+                viewMessages();
                 break;
             case "details":
                 //details();
                 break;
-            case "sendText":
-               // sendText();
+            case "sendMessage":
+                sendMessage();
                 break;
 
             default:
@@ -104,8 +101,82 @@ public class ClientCommand {
 
     }
 
+    private void viewRewards() {
+        System.out.println("viewRewards()");
+        ArrayList<AttributedReward> rmiReturnObject = null;
+        try {
+            rmiReturnObject = remoteObject.viewRewards(clientSession.getUsernameLoggedIn());
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+        System.out.println(rmiReturnObject);
+        if (!rmiReturnObject.isEmpty()) {
+            output.setContent(rmiReturnObject);
+            output.setErrorHappened(false);
+
+        } else {
+            output.setContent(new String("You don't have any rewards.."));
+            output.setErrorHappened(true);
+
+        }
+    }
+
+    private void sendMessage() {
+        System.out.println("message(" + arguments.get(0) + ", " + arguments.get(1) + ")");
+        boolean rmiReturnObject = false;
+        Message message = new Message();
+        message.setSendTo(arguments.get(0));
+        message.setText(arguments.get(1));
+        message.setSendFrom(clientSession.getUsernameLoggedIn());
+
+        try {
+            rmiReturnObject = remoteObject.sendMessage(message);
+            System.out.println("Sent Response: " + rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+        if (rmiReturnObject) {
+            output.setContent(new String("Message sent."));
+        } else {
+            output.setContent(new String("Message not sent."));
+        }
+        output.setErrorHappened(!rmiReturnObject);
+    }
+
+    private void sendReward() {
+
+    }
+
+    private void viewBalance() {
+        System.out.println("viewBalance()");
+        double rmiReturnObject = -1;
+
+
+        try {
+            rmiReturnObject = remoteObject.viewBalance(clientSession.getUsernameLoggedIn());
+            System.out.println("Sent Response: " + rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+        if (rmiReturnObject >= 0) {
+            output.setContent("Balance: " + rmiReturnObject);
+            output.setErrorHappened(false);
+        } else {
+            output.setContent(new String("Error"));
+        }
+        output.setErrorHappened(true);
+    }
+
     private void pledge() {
-        System.out.println("pledge(" + arguments.get(0) + ", " + arguments.get(1) + arguments.get(2) + ")");
+        System.out.println("pledge(" + arguments.get(0) + ", " + arguments.get(1) + ", " + arguments.get(2) + ")");
         boolean rmiReturnObject = false;
         Pledge pledge = new Pledge();
         pledge.setUsername(clientSession.getUsernameLoggedIn());
@@ -125,7 +196,7 @@ public class ClientCommand {
         if (rmiReturnObject) {
             output.setContent(new String("Pledge successful"));
         } else {
-            output.setContent(new String("Error"));
+            output.setContent(new String("Not enough credits."));
         }
         output.setErrorHappened(!rmiReturnObject);
     }
@@ -135,7 +206,6 @@ public class ClientCommand {
         ArrayList<Project> rmiReturnObject = null;
         try {
             rmiReturnObject = remoteObject.listExpired();
-            System.out.println(rmiReturnObject);
         } catch (SQLException e) {
             System.out.println("SQL Exception: " + e.getMessage());
         } catch (RemoteException e) {
@@ -158,7 +228,6 @@ public class ClientCommand {
         ArrayList<Project> rmiReturnObject = null;
         try {
             rmiReturnObject = remoteObject.listInProgress();
-            System.out.println(rmiReturnObject);
         } catch (SQLException e) {
             System.out.println("SQL Exception: " + e.getMessage());
         } catch (RemoteException e) {
@@ -237,6 +306,25 @@ public class ClientCommand {
     }
 
     private void viewMessages() {
+        System.out.println("viewMessages()");
+        ArrayList<Message> rmiReturnObject = null;
+        try {
+            rmiReturnObject = remoteObject.viewMessages(clientSession.getUsernameLoggedIn());
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+        System.out.println(rmiReturnObject);
+        if (!rmiReturnObject.isEmpty()) {
+            output.setContent(rmiReturnObject);
+            output.setErrorHappened(false);
+
+        } else {
+            output.setContent(new String("Não existem mensagens."));
+            output.setErrorHappened(true);
+
+        }
     }
 
 
