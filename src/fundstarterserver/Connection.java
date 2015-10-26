@@ -3,6 +3,7 @@ package fundstarterserver;
 import fundstarter.Command;
 import fundstarter.ServerMessage;
 
+import java.awt.geom.CubicCurve2D;
 import java.io.*;
 import java.net.Socket;
 
@@ -29,15 +30,16 @@ public class Connection extends Thread{
     @Override
     public void run() {
 
-        handleClientCommand();
+        while(true)
+            handleClientCommand();
     }
 
     private void handleClientCommand() {
         Command command = readMessageFromClient();
-        ClientCommand clientCommand = new ClientCommand(command);
-        clientCommand.run(clientSession);
+        System.out.println("New request from " + clientSocket.getInetAddress().getHostName());
+        ClientCommand clientCommand = new ClientCommand(command, clientSession);
+        clientCommand.run();
         ServerMessage commandResponse = clientCommand.getServerMessage();
-        //ONLY FOR TESTS: commandResponse.setRepeatAnswerToPrevious(false);
         sendMessageToClient(commandResponse);
     }
 
