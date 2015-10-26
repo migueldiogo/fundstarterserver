@@ -1,5 +1,6 @@
 package fundstarterserver;
 
+import fundstarter.Command;
 import fundstarter.ServerMessage;
 
 import java.io.*;
@@ -8,7 +9,7 @@ import java.net.Socket;
 
 public class Connection extends Thread{
     private Socket clientSocket;
-    private DataInputStream inputStream;
+    private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
     private ClientSession clientSession;
 
@@ -17,7 +18,7 @@ public class Connection extends Thread{
         try {
             this.clientSocket = clientSocket;
             outputStream = new ObjectOutputStream((clientSocket.getOutputStream()));
-            inputStream = new DataInputStream(clientSocket.getInputStream());
+            inputStream = new ObjectInputStream(clientSocket.getInputStream());
             this.start();
         } catch (IOException e){
             System.out.println("Connection: " + e.getMessage());
@@ -32,8 +33,8 @@ public class Connection extends Thread{
     }
 
     private void handleClientCommand() {
-        String rawClientCommand = readMessageFromClient();
-        ClientCommand clientCommand = new ClientCommand(rawClientCommand);
+        Command command = readMessageFromClient();
+        ClientCommand clientCommand = new ClientCommand(command);
         clientCommand.run(clientSession);
         ServerMessage commandResponse = clientCommand.getServerMessage();
         //ONLY FOR TESTS: commandResponse.setRepeatAnswerToPrevious(false);
@@ -43,18 +44,20 @@ public class Connection extends Thread{
 
 
 
-    private String readMessageFromClient() {
-        String message = "";
+    private Command readMessageFromClient() {
+        Command command = null;
 
         try {
-            message = inputStream.readUTF();
+            command = (Command)inputStream.readObject();
         } catch (EOFException e) {
             System.out.println("EOF: " + e.getMessage());
         } catch (IOException e) {
             System.out.println("IO: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found: " + e.getMessage());
         }
 
-        return message;
+        return command;
     }
 
     private void sendMessageToClient(ServerMessage message) {
