@@ -1,7 +1,12 @@
 package fundstarterserver;
 
+import fundstarter.Command;
+import fundstarter.RMI_interface;
 import fundstarter.ServerMessage;
 
+import java.net.ConnectException;
+import java.rmi.Naming;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,39 +19,69 @@ public class ClientCommand {
         }
     };
 
-    private String rawCommand;
+    private Command command;
     private String[] commandParsed;
     private ServerMessage output;
 
 
-    public ClientCommand(String rawCommand) {
-        this.rawCommand = rawCommand;
+    public ClientCommand(Command command) {
+        this.command = command;
         this.output = new ServerMessage();
-
-        rawCommandParsing();
+        //rawCommandParsing();
     }
 
-
-
+    @Deprecated
     private void rawCommandParsing() {
         commandParsed = rawCommand.split(" ");
         assert commandParsed.length > 0;
         assert commandToNumberOfArgs.get(commandParsed[0]) == (commandParsed.length - 1);
     }
 
-    public void run() {
-        switch (commandParsed[0]) {
+
+    public void run(ClientSession clientSession) {
+        RMI_interface remoteObject = LookupRemoteObject();
+        ArrayList<String> argumentos = new ArrayList<String>();
+
+        for (String argumento : command.getArguments())
+            argumentos.add(argumento);
+
+        switch (command.getCommand()) {
             case "login":
-                System.out.println("login(" + commandParsed[1] + ", " + commandParsed[2] + ")");
-                //TODO output = RMIObject.login(commandParsed[1], commandParsed[2]);
+                System.out.println("login(" + argumentos.get(0) + ", " + argumentos.get(0) + ")");
+                Boolean rmiReturnValue = remoteObject.login(argumentos.get(0), argumentos.get(1));
+                if (rmiReturnValue) {
+                    output.setContent(new String("Welcome, " + argumentos.get(0)));
+                    clientSession.setUsernameLoggedIn(argumentos.get(0));
+                }
+                else {
+                    output.setContent(new String("Invalid username or password."));
+                }
+                clientSession.setSessionLoggedIn(true);
+                output.setRepeatAnswerToPrevious(!rmiReturnValue);
                 break;
 
             default:
                 assert false;
         }
+
     }
 
-    public ServerMessage getOutput() {
+    private RMI_interface LookupRemoteObject() {
+        RMI_interface remoteObject = null;
+
+        try {
+            //System.getProperties().put("java.security.policy", "policy.all");
+            //System.setSecurityManager(new RMISecurityManager());
+            remoteObject = (RMI_interface) Naming.lookup("rmi://192.168.1.102:7000/benfica");
+
+        } catch (Exception e) {
+            output.setContent("Something bad happened to our dataserver: " + e.getMessage());
+            output.setRepeatAnswerToPrevious(true);
+        }
+        return remoteObject;
+    }
+
+    public ServerMessage getServerMessage() {
         return new ServerMessage(output);
     }
 }

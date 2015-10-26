@@ -1,9 +1,12 @@
 package fundstarterserver;
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.RMISecurityManager;
 
 public class Main {
 
@@ -20,10 +23,11 @@ public class Main {
             // behave like a primary server
             new UDPSession(true, alternativeServerAddress);
 
-            int serverPort = 8100;
+            int serverPort = 8200;
             ServerSocket listenSocket = new ServerSocket(serverPort);
             while(true) {
                 Socket clientSocket = listenSocket.accept();
+                System.out.println("Novo Cliente: " + clientSocket.getInetAddress().getHostName());
                 new Connection(clientSocket);
 
             }

@@ -4,17 +4,16 @@ import fundstarter.ServerMessage;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.InputMismatchException;
 
 
 public class Connection extends Thread{
     private Socket clientSocket;
     private DataInputStream inputStream;
     private ObjectOutputStream outputStream;
-    private String usernameLoggedIn;
+    private ClientSession clientSession;
 
     public Connection(Socket clientSocket) {
-        usernameLoggedIn = null;
+        clientSession = new ClientSession();
         try {
             this.clientSocket = clientSocket;
             outputStream = new ObjectOutputStream((clientSocket.getOutputStream()));
@@ -29,57 +28,20 @@ public class Connection extends Thread{
     @Override
     public void run() {
 
-        initiateMenuDrivenIOWithClient();
-
+        handleClientCommand();
     }
 
-    private void initiateMenuDrivenIOWithClient() {
-        ServerMessage messageToClient = new ServerMessage();
-
-        //messageToClient.setContent(menuMain.toString());
-        //messageToClient.setRepeatAnswerToPrevious(false);
-
-        //int optionChosen = messageInteractionWithClient(messageToClient, menuMain);
-
-
+    private void handleClientCommand() {
+        String rawClientCommand = readMessageFromClient();
+        ClientCommand clientCommand = new ClientCommand(rawClientCommand);
+        clientCommand.run(clientSession);
+        ServerMessage commandResponse = clientCommand.getServerMessage();
+        //ONLY FOR TESTS: commandResponse.setRepeatAnswerToPrevious(false);
+        sendMessageToClient(commandResponse);
     }
 
 
 
-
-    private int messageInteractionWithClient(ServerMessage serverMessageAssociated, Menu menuAssociated) {
-        String rawOptionInput = "";
-        int optionInput = 0;
-        Boolean inputValidation;
-
-        do {
-
-            sendMessageToClient(serverMessageAssociated);
-            try {
-                rawOptionInput = inputStream.readUTF();
-            } catch (EOFException e) {
-                System.out.println("EOF: " + e.getMessage());
-            } catch (IOException e) {
-                System.out.println("IO: " + e.getMessage());
-            }
-
-            try {
-                optionInput = Integer.parseInt(rawOptionInput);
-                inputValidation = true;
-
-                OptionList menuAssociatedOptionList = menuAssociated.getOptionsList();
-                if (optionInput <= 0 || optionInput > menuAssociatedOptionList.getSize())
-                    throw new InputMismatchException();
-
-            } catch (InputMismatchException e) {
-                inputValidation = false;
-                serverMessageAssociated.setRepeatAnswerToPrevious(true);
-                serverMessageAssociated.setErrorMessageBefore("An error has occurred. Please try again.");
-            }
-        } while (!inputValidation);
-
-        return optionInput;
-    }
 
     private String readMessageFromClient() {
         String message = "";
@@ -102,23 +64,9 @@ public class Connection extends Thread{
             System.out.println("IO: " + e.getMessage());
         }
     }
-/*
-    private void handleClientCommand() {
-        String rawClientCommand = readMessageFromClient();
-        ServerMessage commandResponse = new ServerMessage();
-        try {
-            // TODO ClientCommand clientCommand = new ClientCommand(rawClientCommand, usernameLoggedIn);
-            // TODO clientCommand.run();
-            // TODO commandResponse = clientCommand.getOutput();
-        } catch (SignOutException e) {
-            usernameLoggedIn = null;
-            //sendMessageToClient(commandResponse + "\n>>>");
-        } catch (ClientLeavingException e) {
-            sendMessageToClient(commandResponse);
-            System.exit(0);
-        }
-    }
-*/
+
+
+
 }
 
 

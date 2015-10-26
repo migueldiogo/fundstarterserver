@@ -1,6 +1,9 @@
 package fundstarterserver;
 
+import org.junit.Before;
 import org.junit.Test;
+
+import java.rmi.RMISecurityManager;
 
 import static org.junit.Assert.*;
 
@@ -10,10 +13,16 @@ import static org.junit.Assert.*;
  */
 public class ClientCommandTest {
 
+
+
     @Test
     public void testRun() throws Exception {
-        ClientCommand clientCommand = new ClientCommand("login miguel 123456");
-        clientCommand.run();
+
+        //System.getProperties().put("java.security.policy", "policy.all");
+        //System.setSecurityManager(new RMISecurityManager());
+
+        ClientCommand clientCommand = new ClientCommand("login ricardo 123");
+        clientCommand.run(new ClientSession());
     }
 
 

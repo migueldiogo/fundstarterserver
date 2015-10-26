@@ -7,11 +7,14 @@ import java.io.Serializable;
  */
 public class ServerMessage implements Serializable{
     private static final long serialVersionUID = 1L;
-
     private String errorMessageBefore;
-    private String content;
+    private Object content;
     private boolean repeatAnswerToPrevious;
 
+    public ServerMessage() {
+        this.errorMessageBefore = "";
+        this.repeatAnswerToPrevious = false;
+    }
 
     public ServerMessage(ServerMessage serverMessageToCopy) {
         this.errorMessageBefore = serverMessageToCopy.getErrorMessageBefore();
@@ -19,17 +22,6 @@ public class ServerMessage implements Serializable{
         this.repeatAnswerToPrevious = serverMessageToCopy.isRepeatAnswerToPrevious();
     }
 
-    public ServerMessage() {
-        this.errorMessageBefore = "";
-        this.content = "";
-        this.repeatAnswerToPrevious = false;
-    }
-
-    public ServerMessage(String errorMessageBefore, String content, boolean repeatAnswerToPrevious) {
-        this.errorMessageBefore = errorMessageBefore;
-        this.content = content;
-        this.repeatAnswerToPrevious = repeatAnswerToPrevious;
-    }
 
     public String getErrorMessageBefore() {
         return errorMessageBefore;
@@ -39,11 +31,11 @@ public class ServerMessage implements Serializable{
         this.errorMessageBefore = errorMessageBefore;
     }
 
-    public String getContent() {
+    public Object getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(Object content) {
         this.content = content;
     }
 
@@ -58,5 +50,17 @@ public class ServerMessage implements Serializable{
     @Override
     public String toString() {
         return errorMessageBefore + "\n" + content;
+    }
+
+    // Return 1 in error
+    public int verifyAnswer(ServerMessage message){
+        if(!repeatAnswerToPrevious){
+            System.out.println("Content: " + this.content);
+            return 0;
+        }
+        else{
+            System.out.println("Error: " + this.errorMessageBefore);
+            return 1;
+        }
     }
 }
