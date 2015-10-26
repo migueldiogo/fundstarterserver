@@ -27,17 +27,15 @@ public class ClientCommand {
     public ClientCommand(Command command) {
         this.command = command;
         this.output = new ServerMessage();
-        checkArgsNumber;
+        //checkArgsNumber();
     }
 
-    @Deprecated
-    /*
-    private void rawCommandParsing() {
-        commandParsed = rawCommand.split(" ");
+/*
+    private void checkArgsNumber() {
         assert commandParsed.length > 0;
         assert commandToNumberOfArgs.get(commandParsed[0]) == (commandParsed.length - 1);
     }
-    */
+*/
 
 
     public void run(ClientSession clientSession) {
