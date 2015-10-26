@@ -20,7 +20,6 @@ public class Command {
     }
 
 
-
     public String getCommand() {
         return this.command;
     }
