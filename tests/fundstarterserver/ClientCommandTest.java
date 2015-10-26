@@ -21,8 +21,8 @@ public class ClientCommandTest {
         //System.getProperties().put("java.security.policy", "policy.all");
         //System.setSecurityManager(new RMISecurityManager());
 
-        ClientCommand clientCommand = new ClientCommand("login ricardo 123");
-        clientCommand.run(new ClientSession());
+        //ClientCommand clientCommand = new ClientCommand("login ricardo 123");
+        //clientCommand.run(new ClientSession());
     }
 
 
