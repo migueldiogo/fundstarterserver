@@ -19,6 +19,8 @@ public class Reward implements Serializable{
         this.giftName = giftName;
     }
 
+    public Reward() {
+    }
 
     public String getProjectName() {
         return projectName;

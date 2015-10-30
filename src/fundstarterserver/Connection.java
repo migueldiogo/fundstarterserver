@@ -37,7 +37,7 @@ public class Connection extends Thread{
     private void handleClientCommand() {
         Command command = readMessageFromClient();
         System.out.println("New request from " + clientSocket.getInetAddress().getHostName());
-        ClientCommand clientCommand = new ClientCommand(command, clientSession);
+        ClientCommand clientCommand = new ClientCommand(this, command, command.getAttachedObject(), clientSession);
         clientCommand.run();
         ServerMessage commandResponse = clientCommand.getServerMessage();
         sendMessageToClient(commandResponse);
@@ -46,7 +46,7 @@ public class Connection extends Thread{
 
 
 
-    private Command readMessageFromClient() {
+    public Command readMessageFromClient() {
         Command command = null;
 
         try {
@@ -62,12 +62,28 @@ public class Connection extends Thread{
         return command;
     }
 
-    private void sendMessageToClient(ServerMessage message) {
+    public void sendMessageToClient(ServerMessage message) {
         try {
             outputStream.writeObject(message);
         } catch (IOException e) {
             System.out.println("IO: " + e.getMessage());
         }
+    }
+
+    public Object readObjectFromClient() {
+        Object object = null;
+
+        try {
+            object = (Object)inputStream.readObject();
+        } catch (EOFException e) {
+            System.out.println("EOF: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IO: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found: " + e.getMessage());
+        }
+
+        return object;
     }
 
 

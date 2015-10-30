@@ -16,10 +16,10 @@ public interface RMIInterface extends Remote {
     public void closeConnection() throws SQLException, RemoteException;
 
     public double viewBalance(String username) throws SQLException, RemoteException;
-    public boolean newProject(String creator, String name, String description, String date, double goal) throws SQLException, RemoteException;
+    public boolean newProject(Project project) throws SQLException, RemoteException;
     public boolean addGift(String projectName, float pledgeMin, String giftName) throws RemoteException, SQLException;
     public ArrayList<AttributedReward> viewRewards(String username) throws SQLException, RemoteException;
-    public boolean sendReward(String receiver, String username) throws SQLException, RemoteException;
+    public boolean sendReward(String projectName, String reward, String from, String sendTo) throws SQLException, RemoteException;
 
 
     public Project viewProjectDetails(String projectName) throws RemoteException, SQLException;
@@ -33,7 +33,17 @@ public interface RMIInterface extends Remote {
 
     public boolean sendMessage(Message message) throws SQLException, RemoteException;
 
+    public boolean addAdmin(String adminUsername, String projeto, String username)  throws SQLException, RemoteException;
 
+    boolean addReward(Reward reward) throws SQLException, RemoteException;
+    boolean removeReward(Reward reward) throws SQLException, RemoteException;
 
+    boolean addExtraReward(Extra extraReward) throws SQLException, RemoteException;
+    boolean removeExtraReward(Extra reward) throws SQLException, RemoteException;
+
+    boolean addQuestion(Question question) throws  SQLException, RemoteException;
+
+    boolean cancelProject(String projectName, String username) throws SQLException, RemoteException;
+    boolean sendMessageToProject(Message message) throws SQLException, RemoteException;
 }
 

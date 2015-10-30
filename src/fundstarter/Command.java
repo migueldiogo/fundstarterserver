@@ -8,8 +8,10 @@ import java.util.ArrayList;
  */
 public class Command implements Serializable{
     private static final long serialVersionUID = 1L;
-    protected String command;
-    protected ArrayList<String> arguments;
+    private String command;
+    private ArrayList<String> arguments;
+    private Object attachedObject;
+
 
     public Command(String command, ArrayList<String> arguments) {
         this.command = command;
@@ -36,5 +38,13 @@ public class Command implements Serializable{
 
     public void setArguments(ArrayList<String> arguments) {
         this.arguments = arguments;
+    }
+
+    public Object getAttachedObject() {
+        return attachedObject;
+    }
+
+    public void setAttachedObject(Object attachedObject) {
+        this.attachedObject = attachedObject;
     }
 }

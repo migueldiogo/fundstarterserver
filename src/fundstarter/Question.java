@@ -13,6 +13,8 @@ public class Question implements Serializable{
 
     private static final long serialVersionUID = 1L;
 
+    public Question() {
+    }
 
     public Question(String projectName, String question, ArrayList<String> answers) {
         this.projectName = projectName;
@@ -43,6 +45,15 @@ public class Question implements Serializable{
 
     public void setQuestion(String question) {
         Question = question;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "projectName='" + projectName + '\'' +
+                ", Question='" + Question + '\'' +
+                ", answers=" + answers +
+                '}';
     }
 }
 
