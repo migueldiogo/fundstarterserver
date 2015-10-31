@@ -628,8 +628,8 @@ public class ClientCommand {
         try {
             //System.getProperties().put("java.security.policy", "policy.all");
             //System.setSecurityManager(new RMISecurityManager());
-            remoteObject = (RMIInterface) Naming.lookup("rmi://192.168.1.87:7000/sd");
-
+            remoteObject = (RMIInterface) Naming.lookup("rmi://" + ServerConfigProperties.RMI_SERVER_IP +
+                    ":" + ServerConfigProperties.RMI_SERVER_PORT + "/sd");
         } catch (ConnectException e) {
             tryToRecoverRMIConnection();
         } catch (RemoteException e) {
@@ -655,7 +655,8 @@ public class ClientCommand {
             System.out.println("Thread interrupted while sleeping: " + e.getMessage());
         }
         try{
-            remoteObject = (RMIInterface) Naming.lookup("rmi://192.168.1.87:7000/sd");
+            remoteObject = (RMIInterface) Naming.lookup("rmi://" + ServerConfigProperties.RMI_SERVER_IP +
+                            ":" + ServerConfigProperties.RMI_SERVER_PORT + "/sd");
             remoteObject.testRMIConnection();
             run();
         } catch (RemoteException e) {

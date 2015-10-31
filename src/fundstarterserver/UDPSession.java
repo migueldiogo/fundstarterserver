@@ -9,18 +9,18 @@ import java.net.*;
 public class UDPSession extends Thread {
     private InetAddress alternativeServerAddress;
     private DatagramSocket socket;
-    private int udpPort;
     private boolean primaryServerMode;
     private byte[] buffer;
+    private int udpPort;
 
 
     public UDPSession(boolean primaryServerMode, InetAddress alternativeServerAddress) {
         this.primaryServerMode = primaryServerMode;
         this.alternativeServerAddress = alternativeServerAddress;
-        udpPort = 6000;
+        this.udpPort = ServerConfigProperties.THIS_SERVER_UDP_PORT;
         try {
             socket = primaryServerMode ? new DatagramSocket() : new DatagramSocket(udpPort);
-            socket.setSoTimeout(2000);
+            socket.setSoTimeout(ServerConfigProperties.ALTERNATIVE_SERVER_PING_TIMEOUT);
         } catch (SocketException e) {
             e.printStackTrace();
         }
