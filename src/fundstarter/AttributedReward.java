@@ -6,28 +6,39 @@ import java.io.Serializable;
  * Created by sergiopires on 26/10/15.
  */
 public class AttributedReward implements Serializable{
-    private String username;
+    private String sendFrom;
     private String projectName;
     private String giftName;
-    private String sender;
+    private String sendTo;
+    private boolean done;
 
     private static final long serialVersionUID = 1L;
 
 
     public AttributedReward(String username, String projectName, String giftName, String sender) {
-        this.username = username;
+        this.sendFrom = username;
         this.projectName = projectName;
         this.giftName = giftName;
-        this.sender = sender;
+        this.sendTo = sender;
     }
 
-
-    public String getUsername() {
-        return username;
+    public AttributedReward(String username, String projectName, String giftName, String sender, boolean done) {
+        this.sendFrom = username;
+        this.projectName = projectName;
+        this.giftName = giftName;
+        this.sendTo = sender;
+        this.done = done;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public AttributedReward(){}
+
+
+    public String getSendFrom() {
+        return sendFrom;
+    }
+
+    public void setSendFrom(String sendFrom) {
+        this.sendFrom = sendFrom;
     }
 
     public String getProjectName() {
@@ -46,21 +57,29 @@ public class AttributedReward implements Serializable{
         this.giftName = giftName;
     }
 
-    public String getSender() {
-        return sender;
+    public String getSendTo() {
+        return sendTo;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSendTo(String sendTo) {
+        this.sendTo = sendTo;
+    }
+
+    public boolean getDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 
     @Override
     public String toString() {
         return "AttributedReward{" +
-                "username='" + username + '\'' +
+                "sendFrom='" + sendFrom + '\'' +
                 ", projectName='" + projectName + '\'' +
                 ", giftName='" + giftName + '\'' +
-                ", sender='" + sender + '\'' +
+                ", sendTo='" + sendTo + '\'' +
                 '}';
     }
 }

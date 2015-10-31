@@ -443,7 +443,7 @@ public class ClientCommand {
             System.out.println("Sent Response: " + rmiReturnObject);
 
             if (rmiReturnObject >= 0) {
-                output.setContent("Balance: " + rmiReturnObject);
+                output.setContent("" + rmiReturnObject);
                 output.setErrorHappened(false);
             } else {
                 output.setContent(new String("Error"));
