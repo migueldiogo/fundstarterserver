@@ -47,4 +47,13 @@ public class Command implements Serializable{
     public void setAttachedObject(Object attachedObject) {
         this.attachedObject = attachedObject;
     }
+
+    @Override
+    public String toString() {
+        return "Command{" +
+                "command='" + command + '\'' +
+                ", arguments=" + arguments +
+                ", attachedObject=" + attachedObject +
+                '}';
+    }
 }

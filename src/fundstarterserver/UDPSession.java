@@ -20,7 +20,7 @@ public class UDPSession extends Thread {
         udpPort = 6000;
         try {
             socket = primaryServerMode ? new DatagramSocket() : new DatagramSocket(udpPort);
-            socket.setSoTimeout(7000);
+            socket.setSoTimeout(2000);
         } catch (SocketException e) {
             e.printStackTrace();
         }

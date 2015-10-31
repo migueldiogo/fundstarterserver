@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FundStarterServer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FundStarterServer_jar</output-path>
+    <root id="archive" name="FundStarterServer.jar">
+      <element id="module-output" name="FundStarterServer" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/lib/junit-4.11.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/lib/hamcrest-core-1.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/lib/hamcrest-library-1.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

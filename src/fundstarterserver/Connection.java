@@ -36,11 +36,13 @@ public class Connection extends Thread{
 
     private void handleClientCommand() {
         Command command = readMessageFromClient();
-        System.out.println("New request from " + clientSocket.getInetAddress().getHostName());
+        System.out.println("New request from " + clientSocket.getInetAddress().getHostName() + ": " + command.toString());
         ClientCommand clientCommand = new ClientCommand(this, command, command.getAttachedObject(), clientSession);
         clientCommand.run();
         ServerMessage commandResponse = clientCommand.getServerMessage();
         sendMessageToClient(commandResponse);
+
+        System.out.println("Sent reply to " + clientSocket.getInetAddress().getHostName() + ": " + commandResponse.toString());
     }
 
 

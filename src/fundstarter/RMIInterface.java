@@ -13,11 +13,9 @@ import java.util.ArrayList;
 public interface RMIInterface extends Remote {
     public boolean signUp(String username, String password) throws RemoteException, SQLException;
     public boolean login(String username, String password) throws RemoteException, SQLException;
-    public void closeConnection() throws SQLException, RemoteException;
 
     public double viewBalance(String username) throws SQLException, RemoteException;
     public boolean newProject(Project project) throws SQLException, RemoteException;
-    public boolean addGift(String projectName, float pledgeMin, String giftName) throws RemoteException, SQLException;
     public ArrayList<AttributedReward> viewRewards(String username) throws SQLException, RemoteException;
     public boolean sendReward(String projectName, String reward, String from, String sendTo) throws SQLException, RemoteException;
 
@@ -45,5 +43,8 @@ public interface RMIInterface extends Remote {
 
     boolean cancelProject(String projectName, String username) throws SQLException, RemoteException;
     boolean sendMessageToProject(Message message) throws SQLException, RemoteException;
+
+    public boolean testRMIConnection() throws RemoteException;
+
 }
 
