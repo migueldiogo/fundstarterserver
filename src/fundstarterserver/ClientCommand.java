@@ -44,8 +44,6 @@ public class ClientCommand {
         for (String argument : rawCommand.getArguments())
             arguments.add(argument);
 
-        System.out.println("Command: " + rawCommand.getCommand());
-
     }
 
 
@@ -118,17 +116,23 @@ public class ClientCommand {
             case "loginFailOver":
                 loginFailOver();
                 break;
+            case "viewPledges":
+                viewPledges();
+                break;
             default:
                 assert false;
         }
 
     }
 
+
+
     private void loginFailOver() {
         System.out.println("loginFailOver(" + arguments.get(0) + ")");
         clientSession.setUsernameLoggedIn(arguments.get(0));
         clientSession.setSessionLoggedIn(true);
         output.setErrorHappened(false);
+        output.setContent("");
     }
 
     private void addExtraToProject() {
@@ -162,7 +166,7 @@ public class ClientCommand {
 
         try {
             rmiReturnObject = remoteObject.removeExtraReward((Extra) attachedObject);
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 output.setContent(new String("Extra removed from " + ((Extra) attachedObject).getProjectName()) + ".");
@@ -187,7 +191,7 @@ public class ClientCommand {
 
         try {
             rmiReturnObject = remoteObject.removeReward((Reward) attachedObject);
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 output.setContent(new String("Reward removed from " + ((Reward) attachedObject).getProjectName()) + ".");
@@ -212,7 +216,7 @@ public class ClientCommand {
 
         try {
             rmiReturnObject = remoteObject.addReward((Reward) attachedObject);
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 output.setContent(new String("Reward added to " + ((Reward) attachedObject).getProjectName()) + ".");
@@ -237,7 +241,7 @@ public class ClientCommand {
 
         try {
             rmiReturnObject = remoteObject.cancelProject(arguments.get(0), clientSession.getUsernameLoggedIn());
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 output.setContent(new String("Project canceled"));
@@ -264,7 +268,7 @@ public class ClientCommand {
         try {
 
             rmiReturnObject = remoteObject.viewProjectDetails(arguments.get(0));
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject != null) {
                 output.setContent(rmiReturnObject);
@@ -298,7 +302,7 @@ public class ClientCommand {
         try {
 
             rmiReturnObject = remoteObject.newProject(project);
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 output.setContent(new String("Project successfully created."));
@@ -322,7 +326,7 @@ public class ClientCommand {
         if (clientSession.getSessionLoggedIn() != null) {
             output.setContent("Bye, " + clientSession.getUsernameLoggedIn());
             clientSession.setSessionLoggedIn(false);
-            clientSession.setUsernameLoggedIn(null);
+            clientSession.setUsernameLoggedIn("");
 
         } else {
             output.setContent("Something went wrong. You're already logged out.");
@@ -335,7 +339,7 @@ public class ClientCommand {
 
         try {
             rmiReturnObject = remoteObject.addAdmin(clientSession.getUsernameLoggedIn(), arguments.get(0), arguments.get(1));
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 output.setContent(new String("The username " + arguments.get(1) + " is now admin of " + arguments.get(0) + "."));
@@ -379,17 +383,39 @@ public class ClientCommand {
 
     }
 
+    private void viewPledges() {
+        System.out.println("viewPledges()");
+        ArrayList<Pledge> rmiReturnObject = null;
+        try {
+            rmiReturnObject = remoteObject.viewPledges(clientSession.getUsernameLoggedIn());
+            System.out.println(rmiReturnObject);
+            if (!rmiReturnObject.isEmpty()) {
+                output.setContent(rmiReturnObject);
+                output.setErrorHappened(false);
+
+            } else {
+                output.setContent(new String("You don't have any pledges.."));
+                output.setErrorHappened(true);
+
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+    }
+
     private void sendMessage() {
-        System.out.println(clientSession.getUsernameLoggedIn() + ": " + "sendmessage(" + arguments.get(0) + ", " + arguments.get(1) + ")");
+        System.out.println(clientSession.getUsernameLoggedIn() + ": " + "sendmessage(" + attachedObject + ")");
         boolean rmiReturnObject = false;
-        Message message = new Message();
-        message.setSendTo(arguments.get(0));
-        message.setText(arguments.get(1));
+        Message message = (Message)attachedObject;
         message.setSendFrom(clientSession.getUsernameLoggedIn());
 
         try {
             rmiReturnObject = remoteObject.sendMessage(message);
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 output.setContent(new String("Message sent."));
@@ -414,7 +440,7 @@ public class ClientCommand {
 
         try {
             rmiReturnObject = remoteObject.sendReward(arguments.get(0), arguments.get(1), clientSession.getUsernameLoggedIn(), arguments.get(2));
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 output.setContent(new String("Reward successfully sent to " + arguments.get(2)));
@@ -440,7 +466,7 @@ public class ClientCommand {
 
         try {
             rmiReturnObject = remoteObject.viewBalance(clientSession.getUsernameLoggedIn());
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject >= 0) {
                 output.setContent("" + rmiReturnObject);
@@ -471,7 +497,7 @@ public class ClientCommand {
 
         try {
             rmiReturnObject = remoteObject.pledge(pledge);
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 output.setContent(new String("Pledge successful to " + arguments.get(0) + "."));
@@ -547,7 +573,7 @@ public class ClientCommand {
         boolean rmiReturnObject = false;
         try {
             rmiReturnObject = remoteObject.login(arguments.get(0), arguments.get(1));
-            System.out.println("Sent Response: " + rmiReturnObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
                 clientSession.setUsernameLoggedIn(arguments.get(0));

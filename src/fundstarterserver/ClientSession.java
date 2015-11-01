@@ -8,6 +8,7 @@ public class ClientSession {
     boolean sessionLoggedIn;
 
     public ClientSession() {
+        usernameLoggedIn = "";
         sessionLoggedIn = false;
     }
 

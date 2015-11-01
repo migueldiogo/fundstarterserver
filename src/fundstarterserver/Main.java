@@ -12,6 +12,8 @@ public class Main {
 
     public static void main(String[] args) {
 
+        OnlineClientsReport allOnlineClientsReport = new OnlineClientsReport();
+
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream("resources/config.properties"));
@@ -57,8 +59,8 @@ public class Main {
             ServerSocket listenSocket = new ServerSocket(ServerConfigProperties.THIS_SERVER_TCP_PORT);
             while(true) {
                 Socket clientSocket = listenSocket.accept();
-                System.out.println("Novo Cliente: " + clientSocket.getInetAddress().getHostName());
-                new Connection(clientSocket);
+                System.out.println("New Client from " + clientSocket.getInetAddress().getHostName());
+                new Connection(clientSocket, allOnlineClientsReport);
 
             }
         } catch (IOException e) {

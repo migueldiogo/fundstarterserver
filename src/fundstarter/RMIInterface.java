@@ -46,5 +46,8 @@ public interface RMIInterface extends Remote {
 
     public boolean testRMIConnection() throws RemoteException;
 
+    public ArrayList<Pledge> viewPledges(String username) throws RemoteException, SQLException;
+
+
 }
 
