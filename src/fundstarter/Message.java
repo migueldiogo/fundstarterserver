@@ -10,6 +10,8 @@ public class Message implements Serializable{
     private String sendFrom;
     private String text;
     private String data;
+    private String projectAssociate;
+
 
     private static final long serialVersionUID = 1L;
 
@@ -56,13 +58,22 @@ public class Message implements Serializable{
         this.data = data;
     }
 
+    public String getProjectAssociate() {
+        return projectAssociate;
+    }
+
+    public void setProjectAssociate(String projectAssociate) {
+        this.projectAssociate = projectAssociate;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
-                "sendTo='" + sendTo + '\'' +
+                "data='" + data + '\'' +
+                ", sendTo='" + sendTo + '\'' +
                 ", sendFrom='" + sendFrom + '\'' +
                 ", text='" + text + '\'' +
-                ", data='" + data + '\'' +
+                ", projectAssociate='" + projectAssociate + '\'' +
                 '}';
     }
 }

@@ -30,6 +30,9 @@ public interface RMIInterface extends Remote {
     public ArrayList<Message> viewMessages(String username) throws SQLException, RemoteException;
 
     public boolean sendMessage(Message message) throws SQLException, RemoteException;
+    public boolean sendMessageToProject(Message message) throws SQLException, RemoteException;
+    public boolean sendMessageFromProject(Message message) throws SQLException, RemoteException;
+
 
     public boolean addAdmin(String adminUsername, String projeto, String username)  throws SQLException, RemoteException;
 
@@ -42,12 +45,14 @@ public interface RMIInterface extends Remote {
     boolean addQuestion(Question question) throws  SQLException, RemoteException;
 
     boolean cancelProject(String projectName, String username) throws SQLException, RemoteException;
-    boolean sendMessageToProject(Message message) throws SQLException, RemoteException;
 
     public boolean testRMIConnection() throws RemoteException;
 
     public ArrayList<Pledge> viewPledges(String username) throws RemoteException, SQLException;
 
+    ArrayList<Message> viewProjectMessages(String projectName, String username) throws RemoteException, SQLException;
 
-}
+
+
+    }
 

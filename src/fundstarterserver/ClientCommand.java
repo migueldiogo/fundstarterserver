@@ -83,6 +83,9 @@ public class ClientCommand {
             case "viewMessages":
                 viewMessages();
                 break;
+            case "viewProjectMessages":
+                viewProjectMessages();
+                break;
             case "details":
                 details();
                 break;
@@ -90,7 +93,10 @@ public class ClientCommand {
                 sendMessage();
                 break;
             case "sendMessageToProject":
-                sendMessage();
+                sendMessageToProject();
+                break;
+            case "sendMessageFromProject":
+                sendMessageFromProject();
                 break;
             case "addAdminToProject":
                 addAdminToProject();
@@ -124,6 +130,7 @@ public class ClientCommand {
         }
 
     }
+
 
 
 
@@ -434,6 +441,59 @@ public class ClientCommand {
 
     }
 
+    private void sendMessageToProject() {
+        System.out.println(clientSession.getUsernameLoggedIn() + ": " + "sendMessageToProject(" + attachedObject + ")");
+        boolean rmiReturnObject = false;
+        Message message = (Message)attachedObject;
+        message.setSendFrom(clientSession.getUsernameLoggedIn());
+
+        try {
+            rmiReturnObject = remoteObject.sendMessageToProject(message);
+            System.out.println("DataServer Response: " + rmiReturnObject);
+
+            if (rmiReturnObject) {
+                output.setContent(new String("Message sent."));
+            } else {
+                output.setContent(new String("Message not sent."));
+            }
+            output.setErrorHappened(!rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
+    }
+
+    private void sendMessageFromProject() {
+        System.out.println(clientSession.getUsernameLoggedIn() + ": " + "sendMessageFromProject(" + attachedObject + ")");
+        boolean rmiReturnObject = false;
+        Message message = (Message)attachedObject;
+        message.setSendFrom(clientSession.getUsernameLoggedIn());
+
+        try {
+            rmiReturnObject = remoteObject.sendMessageFromProject(message);
+            System.out.println("DataServer Response: " + rmiReturnObject);
+
+            if (rmiReturnObject) {
+                output.setContent(new String("Message sent."));
+            } else {
+                output.setContent(new String("Message not sent. Are you admin of this project?"));
+            }
+            output.setErrorHappened(!rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+    }
+
     private void sendReward() {
         System.out.println("sendReward(" + arguments.get(0) + ", " + arguments.get(1) + ")");
         boolean rmiReturnObject = false;
@@ -632,7 +692,33 @@ public class ClientCommand {
                 output.setErrorHappened(false);
 
             } else {
-                output.setContent(new String("Não existem mensagens."));
+                output.setContent(new String("There is no messages."));
+                output.setErrorHappened(true);
+
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
+    }
+
+    private void viewProjectMessages() {
+        System.out.println("viewProjectMessages()");
+        ArrayList<Message> rmiReturnObject;
+        try {
+            rmiReturnObject = remoteObject.viewProjectMessages(arguments.get(0), clientSession.getUsernameLoggedIn());
+
+            System.out.println(rmiReturnObject);
+            if (!rmiReturnObject.isEmpty()) {
+                output.setContent(rmiReturnObject);
+                output.setErrorHappened(false);
+
+            } else {
+                output.setContent(new String("There is no messages or you don't have enough privileges to see them."));
                 output.setErrorHappened(true);
 
             }
