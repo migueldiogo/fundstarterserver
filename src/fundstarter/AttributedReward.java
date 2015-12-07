@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * Created by sergiopires on 26/10/15.
  */
+@Deprecated
 public class AttributedReward implements Serializable{
     private String sendFrom;
     private String projectName;

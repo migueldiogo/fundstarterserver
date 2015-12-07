@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Miguel Prata Leal on 01/11/15.
  */
+@Deprecated
 public class Answer implements Serializable{
     private static final long serialVersionUID = 1L;
 

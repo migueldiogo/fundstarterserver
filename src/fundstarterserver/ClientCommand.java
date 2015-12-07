@@ -59,19 +59,19 @@ public class ClientCommand {
             case "signup":
                 signUP();
                 break;
-            case "viewBalance":
+            case "getBalance":
                 viewBalance();
                 break;
-            case "viewRewards":
+            case "getRewardsFromUser":
                 viewRewards();
                 break;
-            case "sendReward":
+            case "sendRewardToUser":
                 sendReward();
                 break;
-            case "listInProgress":
+            case "getInProgressProjects":
                 listInProgress();
                 break;
-            case "listExpired":
+            case "gerExpiredProjects":
                 listExpired();
                 break;
             case "newProject":
@@ -80,10 +80,10 @@ public class ClientCommand {
             case "pledge":
                 pledge();
                 break;
-            case "viewMessages":
+            case "getUserMessages":
                 viewMessages();
                 break;
-            case "viewProjectMessages":
+            case "getProjectMessages":
                 viewProjectMessages();
                 break;
             case "details":
@@ -122,7 +122,7 @@ public class ClientCommand {
             case "loginFailOver":
                 loginFailOver();
                 break;
-            case "viewPledges":
+            case "getPledgesFromUser":
                 viewPledges();
                 break;
             default:
@@ -132,29 +132,20 @@ public class ClientCommand {
     }
 
 
-
-
-    private void loginFailOver() {
-        System.out.println("loginFailOver(" + arguments.get(0) + ")");
-        clientSession.setUsernameLoggedIn(arguments.get(0));
-        clientSession.setSessionLoggedIn(true);
-        output.setErrorHappened(false);
-        output.setContent("");
-    }
-
-    private void addExtraToProject() {
-        System.out.println("addExtraToProject()");
+    public void login() {
+        System.out.println("login(" + arguments.get(0) + ", " + arguments.get(1) + ")");
         boolean rmiReturnObject = false;
-
         try {
-            rmiReturnObject = remoteObject.addExtraReward((Extra) attachedObject);
-            System.out.println("Sent Response: " + rmiReturnObject);
+            rmiReturnObject = remoteObject.login(arguments.get(0), arguments.get(1));
+            System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
-                output.setContent(new String("Extra added to " + ((Extra) attachedObject).getProjectName()) + ".");
+                clientSession.setUsernameLoggedIn(arguments.get(0));
+                output.setContent(new String("Welcome, " + arguments.get(0)));
             } else {
-                output.setContent(new String("Extra not added. Something went wrong."));
+                output.setContent(new String("Invalid username or password."));
             }
+            clientSession.setSessionLoggedIn(true);
             output.setErrorHappened(!rmiReturnObject);
 
         } catch (SQLException e) {
@@ -165,23 +156,24 @@ public class ClientCommand {
             System.out.println("Remote Exception: " + e.getMessage());
         }
 
+
+
     }
 
-    private void removeExtraFromProject() {
-        System.out.println("removeExtraFromProject()");
+    public void signUP() {
+        System.out.println("signup(" + arguments.get(0) + ", " + arguments.get(1) + ")");
         boolean rmiReturnObject = false;
-
         try {
-            rmiReturnObject = remoteObject.removeExtraReward((Extra) attachedObject);
-            System.out.println("DataServer Response: " + rmiReturnObject);
+            rmiReturnObject = remoteObject.signUp(arguments.get(0), arguments.get(1));
 
+            System.out.println(rmiReturnObject);
             if (rmiReturnObject) {
-                output.setContent(new String("Extra removed from " + ((Extra) attachedObject).getProjectName()) + ".");
+                output.setContent(new String("User, " + arguments.get(0) + " registered."));
             } else {
-                output.setContent(new String("Extra not removed. Something went wrong."));
+                output.setContent(new String("Username already exists"));
             }
+            clientSession.setSessionLoggedIn(false);
             output.setErrorHappened(!rmiReturnObject);
-
         } catch (SQLException e) {
             System.out.println("SQL Exception: " + e.getMessage());
         } catch (ConnectException e) {
@@ -192,100 +184,34 @@ public class ClientCommand {
 
     }
 
-    private void removeRewardFromProject() {
-        System.out.println("removeRewardFromProject()");
-        boolean rmiReturnObject = false;
+    private void logoutUser() {
+        System.out.println(clientSession.getUsernameLoggedIn() + ": logout()");
+        if (clientSession.getSessionLoggedIn() != null) {
+            output.setContent("Bye, " + clientSession.getUsernameLoggedIn());
+            clientSession.setSessionLoggedIn(false);
+            clientSession.setUsernameLoggedIn("");
 
-        try {
-            rmiReturnObject = remoteObject.removeReward((Reward) attachedObject);
-            System.out.println("DataServer Response: " + rmiReturnObject);
-
-            if (rmiReturnObject) {
-                output.setContent(new String("Reward removed from " + ((Reward) attachedObject).getProjectName()) + ".");
-            } else {
-                output.setContent(new String("Reward not removed. Something went wrong."));
-            }
-            output.setErrorHappened(!rmiReturnObject);
-
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
+        } else {
+            output.setContent("Something went wrong. You're already logged out.");
         }
-
     }
 
-    private void addRewardToProject() {
-        System.out.println("addRewardToProject()");
-        boolean rmiReturnObject = false;
+    private void viewBalance() {
+        System.out.println("getBalance()");
+        double rmiReturnObject = -1;
+
 
         try {
-            rmiReturnObject = remoteObject.addReward((Reward) attachedObject);
+            rmiReturnObject = remoteObject.getBalance(clientSession.getUsernameLoggedIn());
             System.out.println("DataServer Response: " + rmiReturnObject);
 
-            if (rmiReturnObject) {
-                output.setContent(new String("Reward added to " + ((Reward) attachedObject).getProjectName()) + ".");
-            } else {
-                output.setContent(new String("Reward not added. Something went wrong."));
-            }
-            output.setErrorHappened(!rmiReturnObject);
-
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
-        }
-
-    }
-
-    private void cancelProject() {
-        System.out.println("cancelProject(" + arguments.get(0) + ")");
-        boolean rmiReturnObject = false;
-
-        try {
-            rmiReturnObject = remoteObject.cancelProject(arguments.get(0), clientSession.getUsernameLoggedIn());
-            System.out.println("DataServer Response: " + rmiReturnObject);
-
-            if (rmiReturnObject) {
-                output.setContent(new String("Project canceled"));
-            } else {
-                output.setContent(new String("An error has occurred because that project doesn't exists or you don't have enough privileges."));
-            }
-            output.setErrorHappened(!rmiReturnObject);
-
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
-        }
-
-    }
-
-    private void details() {
-        System.out.println("viewProjectDetails(" + clientSession.getUsernameLoggedIn() + ": " +  arguments.get(0) + ")");
-
-        Project rmiReturnObject = null;
-
-        try {
-
-            rmiReturnObject = remoteObject.viewProjectDetails(arguments.get(0));
-            System.out.println("DataServer Response: " + rmiReturnObject);
-
-            if (rmiReturnObject != null) {
-                output.setContent(rmiReturnObject);
+            if (rmiReturnObject >= 0) {
+                output.setContent("" + rmiReturnObject);
                 output.setErrorHappened(false);
-
             } else {
-                output.setContent(new String("That project doesn't exist."));
-                output.setErrorHappened(true);
-
+                output.setContent(new String("Error"));
             }
+            output.setErrorHappened(true);
 
         } catch (SQLException e) {
             System.out.println("SQL Exception: " + e.getMessage());
@@ -328,16 +254,54 @@ public class ClientCommand {
 
     }
 
-    private void logoutUser() {
-        System.out.println(clientSession.getUsernameLoggedIn() + ": logout()");
-        if (clientSession.getSessionLoggedIn() != null) {
-            output.setContent("Bye, " + clientSession.getUsernameLoggedIn());
-            clientSession.setSessionLoggedIn(false);
-            clientSession.setUsernameLoggedIn("");
+    private void addExtraToProject() {
+        System.out.println("addExtraToProject()");
+        boolean rmiReturnObject = false;
 
-        } else {
-            output.setContent("Something went wrong. You're already logged out.");
+        try {
+            rmiReturnObject = remoteObject.addGoalToProject((Goal) attachedObject);
+            System.out.println("Sent Response: " + rmiReturnObject);
+
+            if (rmiReturnObject) {
+                output.setContent(new String("Goal added to " + ((Goal) attachedObject).getProjectName()) + ".");
+            } else {
+                output.setContent(new String("Goal not added. Something went wrong."));
+            }
+            output.setErrorHappened(!rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
         }
+
+    }
+
+    private void addRewardToProject() {
+        System.out.println("addRewardToProject()");
+        boolean rmiReturnObject = false;
+
+        try {
+            rmiReturnObject = remoteObject.addRewardToProject((Reward) attachedObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
+
+            if (rmiReturnObject) {
+                output.setContent(new String("Reward added to " + ((Reward) attachedObject).getProjectName()) + ".");
+            } else {
+                output.setContent(new String("Reward not added. Something went wrong."));
+            }
+            output.setErrorHappened(!rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
     }
 
     private void addAdminToProject() {
@@ -345,7 +309,7 @@ public class ClientCommand {
         boolean rmiReturnObject = false;
 
         try {
-            rmiReturnObject = remoteObject.addAdmin(clientSession.getUsernameLoggedIn(), arguments.get(0), arguments.get(1));
+            rmiReturnObject = remoteObject.addAdminToProject(clientSession.getUsernameLoggedIn(), arguments.get(0), arguments.get(1));
             System.out.println("DataServer Response: " + rmiReturnObject);
 
             if (rmiReturnObject) {
@@ -365,11 +329,61 @@ public class ClientCommand {
 
     }
 
+    private void removeExtraFromProject() {
+        System.out.println("removeExtraFromProject()");
+        boolean rmiReturnObject = false;
+
+        try {
+            rmiReturnObject = remoteObject.removeGoalFromProject((Goal) attachedObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
+
+            if (rmiReturnObject) {
+                output.setContent(new String("Goal removed from " + ((Goal) attachedObject).getProjectName()) + ".");
+            } else {
+                output.setContent(new String("Goal not removed. Something went wrong."));
+            }
+            output.setErrorHappened(!rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
+    }
+
+    private void removeRewardFromProject() {
+        System.out.println("removeRewardFromProject()");
+        boolean rmiReturnObject = false;
+
+        try {
+            rmiReturnObject = remoteObject.removeRewardFromProject((Reward) attachedObject);
+            System.out.println("DataServer Response: " + rmiReturnObject);
+
+            if (rmiReturnObject) {
+                output.setContent(new String("Reward removed from " + ((Reward) attachedObject).getProjectName()) + ".");
+            } else {
+                output.setContent(new String("Reward not removed. Something went wrong."));
+            }
+            output.setErrorHappened(!rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
+    }
+
     private void viewRewards() {
-        System.out.println("viewRewards()");
+        System.out.println("getRewardsFromUser()");
         ArrayList<AttributedReward> rmiReturnObject = null;
         try {
-            rmiReturnObject = remoteObject.viewRewards(clientSession.getUsernameLoggedIn());
+            rmiReturnObject = remoteObject.getRewardsFromUser(clientSession.getUsernameLoggedIn());
             System.out.println(rmiReturnObject);
             if (!rmiReturnObject.isEmpty()) {
                 output.setContent(rmiReturnObject);
@@ -391,10 +405,10 @@ public class ClientCommand {
     }
 
     private void viewPledges() {
-        System.out.println("viewPledges()");
+        System.out.println("getPledgesFromUser()");
         ArrayList<Pledge> rmiReturnObject = null;
         try {
-            rmiReturnObject = remoteObject.viewPledges(clientSession.getUsernameLoggedIn());
+            rmiReturnObject = remoteObject.getPledgesFromUser(clientSession.getUsernameLoggedIn());
             System.out.println(rmiReturnObject);
             if (!rmiReturnObject.isEmpty()) {
                 output.setContent(rmiReturnObject);
@@ -412,6 +426,116 @@ public class ClientCommand {
         } catch (RemoteException e) {
             System.out.println("Remote Exception: " + e.getMessage());
         }
+    }
+
+    private void cancelProject() {
+        System.out.println("cancelProject(" + arguments.get(0) + ")");
+        boolean rmiReturnObject = false;
+
+        try {
+            rmiReturnObject = remoteObject.cancelProject(arguments.get(0), clientSession.getUsernameLoggedIn());
+            System.out.println("DataServer Response: " + rmiReturnObject);
+
+            if (rmiReturnObject) {
+                output.setContent(new String("Project canceled"));
+            } else {
+                output.setContent(new String("An error has occurred because that project doesn't exists or you don't have enough privileges."));
+            }
+            output.setErrorHappened(!rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
+    }
+
+    private void details() {
+        System.out.println("getProjectDetails(" + clientSession.getUsernameLoggedIn() + ": " +  arguments.get(0) + ")");
+
+        Project rmiReturnObject = null;
+
+        try {
+
+            rmiReturnObject = remoteObject.getProjectDetails(arguments.get(0));
+            System.out.println("DataServer Response: " + rmiReturnObject);
+
+            if (rmiReturnObject != null) {
+                output.setContent(rmiReturnObject);
+                output.setErrorHappened(false);
+
+            } else {
+                output.setContent(new String("That project doesn't exist."));
+                output.setErrorHappened(true);
+
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
+    }
+
+    private void pledge() {
+        System.out.println("pledge(" + arguments.get(0) + ", " + arguments.get(1) + ", " + arguments.get(2) + ")");
+        boolean rmiReturnObject = false;
+        Pledge pledge = new Pledge();
+        pledge.setUsername(clientSession.getUsernameLoggedIn());
+        pledge.setProjectName(arguments.get(0));
+        pledge.setAmount(Double.parseDouble(arguments.get(1)));
+        pledge.setDecision(arguments.get(2));
+
+        try {
+            rmiReturnObject = remoteObject.pledge(pledge);
+            System.out.println("DataServer Response: " + rmiReturnObject);
+
+            if (rmiReturnObject) {
+                output.setContent(new String("Pledge successful to " + arguments.get(0) + "."));
+            } else {
+                output.setContent(new String("Not enough credits or project has expired."));
+            }
+            output.setErrorHappened(!rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
+    }
+
+    private void sendReward() {
+        System.out.println("sendRewardToUser(" + arguments.get(0) + ", " + arguments.get(1) + ")");
+        boolean rmiReturnObject = false;
+
+        try {
+            rmiReturnObject = remoteObject.sendRewardToUser(arguments.get(0), arguments.get(1), clientSession.getUsernameLoggedIn(), arguments.get(2));
+            System.out.println("DataServer Response: " + rmiReturnObject);
+
+            if (rmiReturnObject) {
+                output.setContent(new String("Reward successfully sent to " + arguments.get(2)));
+            } else {
+                output.setContent(new String("Reward not sent."));
+            }
+            output.setErrorHappened(!rmiReturnObject);
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
     }
 
     private void sendMessage() {
@@ -494,197 +618,11 @@ public class ClientCommand {
         }
     }
 
-    private void sendReward() {
-        System.out.println("sendReward(" + arguments.get(0) + ", " + arguments.get(1) + ")");
-        boolean rmiReturnObject = false;
-
-        try {
-            rmiReturnObject = remoteObject.sendReward(arguments.get(0), arguments.get(1), clientSession.getUsernameLoggedIn(), arguments.get(2));
-            System.out.println("DataServer Response: " + rmiReturnObject);
-
-            if (rmiReturnObject) {
-                output.setContent(new String("Reward successfully sent to " + arguments.get(2)));
-            } else {
-                output.setContent(new String("Reward not sent."));
-            }
-            output.setErrorHappened(!rmiReturnObject);
-
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
-        }
-
-    }
-
-    private void viewBalance() {
-        System.out.println("viewBalance()");
-        double rmiReturnObject = -1;
-
-
-        try {
-            rmiReturnObject = remoteObject.viewBalance(clientSession.getUsernameLoggedIn());
-            System.out.println("DataServer Response: " + rmiReturnObject);
-
-            if (rmiReturnObject >= 0) {
-                output.setContent("" + rmiReturnObject);
-                output.setErrorHappened(false);
-            } else {
-                output.setContent(new String("Error"));
-            }
-            output.setErrorHappened(true);
-
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
-        }
-
-    }
-
-    private void pledge() {
-        System.out.println("pledge(" + arguments.get(0) + ", " + arguments.get(1) + ", " + arguments.get(2) + ")");
-        boolean rmiReturnObject = false;
-        Pledge pledge = new Pledge();
-        pledge.setUsername(clientSession.getUsernameLoggedIn());
-        pledge.setProjectName(arguments.get(0));
-        pledge.setAmount(Double.parseDouble(arguments.get(1)));
-        pledge.setAnswer(arguments.get(2));
-
-        try {
-            rmiReturnObject = remoteObject.pledge(pledge);
-            System.out.println("DataServer Response: " + rmiReturnObject);
-
-            if (rmiReturnObject) {
-                output.setContent(new String("Pledge successful to " + arguments.get(0) + "."));
-            } else {
-                output.setContent(new String("Not enough credits or project has expired."));
-            }
-            output.setErrorHappened(!rmiReturnObject);
-
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
-        }
-
-    }
-
-    private void listExpired() {
-        System.out.println("listExpired()");
-        ArrayList<Project> rmiReturnObject = null;
-        try {
-            rmiReturnObject = remoteObject.listExpired();
-
-            System.out.println(rmiReturnObject);
-            if (!rmiReturnObject.isEmpty()) {
-                output.setContent(rmiReturnObject);
-                output.setErrorHappened(false);
-
-            } else {
-                output.setContent(new String("Não existem projetos."));
-                output.setErrorHappened(true);
-
-            }
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
-        }
-
-    }
-
-    private void listInProgress() {
-        System.out.println("listInProgress()");
-        ArrayList<Project> rmiReturnObject = null;
-        try {
-            rmiReturnObject = remoteObject.listInProgress();
-
-            System.out.println(rmiReturnObject);
-            if (!rmiReturnObject.isEmpty()) {
-                output.setContent(rmiReturnObject);
-                output.setErrorHappened(false);
-
-            } else {
-                output.setContent(new String("Não existem projetos."));
-                output.setErrorHappened(true);
-
-            }
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
-        }
-
-    }
-
-    public void login() {
-        System.out.println("login(" + arguments.get(0) + ", " + arguments.get(1) + ")");
-        boolean rmiReturnObject = false;
-        try {
-            rmiReturnObject = remoteObject.login(arguments.get(0), arguments.get(1));
-            System.out.println("DataServer Response: " + rmiReturnObject);
-
-            if (rmiReturnObject) {
-                clientSession.setUsernameLoggedIn(arguments.get(0));
-                output.setContent(new String("Welcome, " + arguments.get(0)));
-            } else {
-                output.setContent(new String("Invalid username or password."));
-            }
-            clientSession.setSessionLoggedIn(true);
-            output.setErrorHappened(!rmiReturnObject);
-
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
-        }
-
-
-
-    }
-
-    public void signUP() {
-        System.out.println("signup(" + arguments.get(0) + ", " + arguments.get(1) + ")");
-        boolean rmiReturnObject = false;
-        try {
-            rmiReturnObject = remoteObject.signUp(arguments.get(0), arguments.get(1));
-
-            System.out.println(rmiReturnObject);
-            if (rmiReturnObject) {
-                output.setContent(new String("User, " + arguments.get(0) + " registered."));
-            } else {
-                output.setContent(new String("Username already exists"));
-            }
-            clientSession.setSessionLoggedIn(false);
-            output.setErrorHappened(!rmiReturnObject);
-        } catch (SQLException e) {
-            System.out.println("SQL Exception: " + e.getMessage());
-        } catch (ConnectException e) {
-            tryToRecoverRMIConnection();
-        } catch (RemoteException e) {
-            System.out.println("Remote Exception: " + e.getMessage());
-        }
-
-    }
-
     private void viewMessages() {
-        System.out.println("viewMessages()");
+        System.out.println("getUserMessages()");
         ArrayList<Message> rmiReturnObject = null;
         try {
-            rmiReturnObject = remoteObject.viewMessages(clientSession.getUsernameLoggedIn());
+            rmiReturnObject = remoteObject.getUserMessages(clientSession.getUsernameLoggedIn());
 
             System.out.println(rmiReturnObject);
             if (!rmiReturnObject.isEmpty()) {
@@ -707,10 +645,10 @@ public class ClientCommand {
     }
 
     private void viewProjectMessages() {
-        System.out.println("viewProjectMessages()");
+        System.out.println("getProjectMessages()");
         ArrayList<Message> rmiReturnObject;
         try {
-            rmiReturnObject = remoteObject.viewProjectMessages(arguments.get(0), clientSession.getUsernameLoggedIn());
+            rmiReturnObject = remoteObject.getProjectMessages(arguments.get(0), clientSession.getUsernameLoggedIn());
 
             System.out.println(rmiReturnObject);
             if (!rmiReturnObject.isEmpty()) {
@@ -730,6 +668,67 @@ public class ClientCommand {
             System.out.println("Remote Exception: " + e.getMessage());
         }
 
+    }
+
+    private void listExpired() {
+        System.out.println("gerExpiredProjects()");
+        ArrayList<Project> rmiReturnObject = null;
+        try {
+            rmiReturnObject = remoteObject.gerExpiredProjects();
+
+            System.out.println(rmiReturnObject);
+            if (!rmiReturnObject.isEmpty()) {
+                output.setContent(rmiReturnObject);
+                output.setErrorHappened(false);
+
+            } else {
+                output.setContent(new String("Não existem projetos."));
+                output.setErrorHappened(true);
+
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
+    }
+
+    private void listInProgress() {
+        System.out.println("getInProgressProjects()");
+        ArrayList<Project> rmiReturnObject = null;
+        try {
+            rmiReturnObject = remoteObject.getInProgressProjects();
+
+            System.out.println(rmiReturnObject);
+            if (!rmiReturnObject.isEmpty()) {
+                output.setContent(rmiReturnObject);
+                output.setErrorHappened(false);
+
+            } else {
+                output.setContent(new String("Não existem projetos."));
+                output.setErrorHappened(true);
+
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception: " + e.getMessage());
+        } catch (ConnectException e) {
+            tryToRecoverRMIConnection();
+        } catch (RemoteException e) {
+            System.out.println("Remote Exception: " + e.getMessage());
+        }
+
+    }
+
+
+    private void loginFailOver() {
+        System.out.println("loginFailOver(" + arguments.get(0) + ")");
+        clientSession.setUsernameLoggedIn(arguments.get(0));
+        clientSession.setSessionLoggedIn(true);
+        output.setErrorHappened(false);
+        output.setContent("");
     }
 
 
@@ -756,7 +755,6 @@ public class ClientCommand {
         return remoteObject;
 
     }
-
 
 
     public void tryToRecoverRMIConnection() {

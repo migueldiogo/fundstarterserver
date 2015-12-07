@@ -6,52 +6,74 @@ import java.io.Serializable;
  * Created by sergiopires on 26/10/15.
  */
 public class Reward implements Serializable{
-    private String projectName;
-    private double pledgeMin;
-    private String giftName;
     private static final long serialVersionUID = 1L;
 
+    private int userId;
+    private int projectId;
+    private double minAmount;
+    private String description;
 
-
-    public Reward(String projectName, double pledgeMin, String giftName) {
-        this.projectName = projectName;
-        this.pledgeMin = pledgeMin;
-        this.giftName = giftName;
-    }
+    private double done;
 
     public Reward() {
     }
 
-    public String getProjectName() {
-        return projectName;
+    public Reward(int userId, int projectId, double minAmount, String description) {
+        this.userId = userId;
+        this.projectId = projectId;
+        this.minAmount = minAmount;
+        this.description = description;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+
+    public int getUserId() {
+        return userId;
     }
 
-    public double getPledgeMin() {
-        return pledgeMin;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public void setPledgeMin(double pledgeMin) {
-        this.pledgeMin = pledgeMin;
+    public int getProjectId() {
+        return projectId;
     }
 
-    public String getGiftName() {
-        return giftName;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
-    public void setGiftName(String giftName) {
-        this.giftName = giftName;
+    public double getMinAmount() {
+        return minAmount;
+    }
+
+    public void setMinAmount(double minAmount) {
+        this.minAmount = minAmount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getDone() {
+        return done;
+    }
+
+    public void setDone(double done) {
+        this.done = done;
     }
 
     @Override
     public String toString() {
         return "Reward{" +
-                "projectName='" + projectName + '\'' +
-                ", pledgeMin=" + pledgeMin +
-                ", giftName='" + giftName + '\'' +
+                "description='" + description + '\'' +
+                ", userId=" + userId +
+                ", projectId=" + projectId +
+                ", minAmount=" + minAmount +
+                ", done=" + done +
                 '}';
     }
 }

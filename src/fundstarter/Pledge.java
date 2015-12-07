@@ -8,35 +8,44 @@ import java.io.Serializable;
 public class Pledge implements Serializable{
     private static final long serialVersionUID = 1L;
 
-    private String username;
-    private String projectName;
+    private int pledgeId;
+    private int pledgerUsreId;
+    private int projectId;
     private double amount;
-    private String answer;
-
-    public Pledge(String username, String projectName, double amount, String answer) {
-        this.username = username;
-        this.projectName = projectName;
-        this.amount = amount;
-        this.answer = answer;
-    }
+    private String decision;
 
     public Pledge() {
     }
 
-    public String getUsername() {
-        return username;
+    public Pledge(int pledgerUsreId, int projectId, double amount, String decision) {
+        this.pledgerUsreId = pledgerUsreId;
+        this.projectId = projectId;
+        this.amount = amount;
+        this.decision = decision;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public int getPledgeId() {
+        return pledgeId;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public void setPledgeId(int pledgeId) {
+        this.pledgeId = pledgeId;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public int getPledgerUsreId() {
+        return pledgerUsreId;
+    }
+
+    public void setPledgerUsreId(int pledgerUsreId) {
+        this.pledgerUsreId = pledgerUsreId;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public double getAmount() {
@@ -47,11 +56,22 @@ public class Pledge implements Serializable{
         this.amount = amount;
     }
 
-    public String getAnswer() {
-        return answer;
+    public String getDecision() {
+        return decision;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setDecision(String decision) {
+        this.decision = decision;
+    }
+
+    @Override
+    public String toString() {
+        return "Pledge{" +
+                "amount=" + amount +
+                ", pledgeId=" + pledgeId +
+                ", pledgerUsreId=" + pledgerUsreId +
+                ", projectId=" + projectId +
+                ", decision='" + decision + '\'' +
+                '}';
     }
 }

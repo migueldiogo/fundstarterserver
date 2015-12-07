@@ -7,38 +7,34 @@ import java.util.ArrayList;
  * Created by sergiopires on 26/10/15.
  */
 public class Project implements Serializable{
-    private String creator;
+    private static final long serialVersionUID = 1L;
+
+    private int projectId;
     private String name;
     private String description;
-    private String date;
-    private double goal;
+    private String expirationDate;
+    private double firstGoal;
     private double totalAmountEarned;
-    private ArrayList<Reward> rewards;
-    private Question question;
-    private ArrayList<Extra> extras;
-
-    private static final long serialVersionUID = 1L;
 
     public Project() {
     }
 
-    public Project(String creator, String name, String description, String date, double goal, ArrayList<Reward> rewards, Question question, ArrayList<Extra> extras) {
-        this.creator = creator;
+    public Project(String name, String description, String expirationDate, double firstGoal) {
         this.name = name;
         this.description = description;
-        this.date = date;
-        this.goal = goal;
-        this.rewards = rewards;
-        this.question = question;
-        this.extras = extras;
-
+        this.expirationDate = expirationDate;
+        this.firstGoal = firstGoal;
     }
 
-
-
-    public double getPercentageOfProgress(){
-        return (totalAmountEarned/goal)*100;
+    public Project(int projectId, String name, String description, String expirationDate, double firstGoal, double totalAmountEarned) {
+        this.projectId = projectId;
+        this.name = name;
+        this.description = description;
+        this.expirationDate = expirationDate;
+        this.firstGoal = firstGoal;
+        this.totalAmountEarned = totalAmountEarned;
     }
+
 
     public String getName() {
         return name;
@@ -56,44 +52,20 @@ public class Project implements Serializable{
         this.description = description;
     }
 
-    public String getDate() {
-        return date;
+    public String getExpirationDate() {
+        return expirationDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
-    public double getGoal() {
-        return goal;
+    public double getFirstGoal() {
+        return firstGoal;
     }
 
-    public void setGoal(double goal) {
-        this.goal = goal;
-    }
-
-    public ArrayList<Reward> getRewards() {
-        return rewards;
-    }
-
-    public void setRewards(ArrayList<Reward> rewards) {
-        this.rewards = rewards;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setFirstGoal(double firstGoal) {
+        this.firstGoal = firstGoal;
     }
 
     public double getTotalAmountEarned() {
@@ -104,26 +76,20 @@ public class Project implements Serializable{
         this.totalAmountEarned = totalAmountEarned;
     }
 
-    public ArrayList<Extra> getExtras() {
-        return extras;
+
+    public double getPercentageOfProgress(){
+        return (totalAmountEarned/ firstGoal)*100;
     }
 
-    public void setExtras(ArrayList<Extra> extras) {
-        this.extras = extras;
-    }
 
     @Override
     public String toString() {
         return "Project{" +
-                "creator='" + creator + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", date='" + date + '\'' +
-                ", goal=" + goal +
+                ", expirationDate='" + expirationDate + '\'' +
+                ", firstGoal=" + firstGoal +
                 ", totalAmountEarned=" + totalAmountEarned +
-                ", rewards=" + rewards +
-                ", question=" + question +
-                ", extras=" + extras +
                 '}';
     }
 }

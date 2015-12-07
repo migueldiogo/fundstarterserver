@@ -3,6 +3,7 @@ package fundstarter;
 /**
  * Created by sergiopires on 26/10/15.
  */
+@Deprecated
 public class Admin {
     private String projectName;
     private String username;
