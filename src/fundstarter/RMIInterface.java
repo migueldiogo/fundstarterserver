@@ -33,7 +33,7 @@ public interface RMIInterface extends Remote {
 
     boolean removeGoalFromProject(Goal goal, int projectId) throws SQLException, RemoteException;
 
-    boolean removeRewardFromProject(int rewardId, int projectId) throws SQLException, RemoteException;
+    boolean removeRewardFromProject(int rewardId) throws SQLException, RemoteException;
 
     Project getProjectDetails(int projectId) throws RemoteException, SQLException;
 

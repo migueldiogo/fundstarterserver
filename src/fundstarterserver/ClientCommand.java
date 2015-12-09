@@ -263,7 +263,7 @@ public class ClientCommand {
     }
 
     private void removeRewardFromProject() throws SQLException, RemoteException {
-        boolean rmiReturnObject = remoteObject.removeRewardFromProject(Integer.parseInt(arguments.get(0)), Integer.parseInt(arguments.get(1)));
+        boolean rmiReturnObject = remoteObject.removeRewardFromProject(Integer.parseInt(arguments.get(0)));
         System.out.println("DataServer Response: " + rmiReturnObject);
         output.setContent("Reward successfully removed from project.");
     }
