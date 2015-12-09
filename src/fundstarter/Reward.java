@@ -9,18 +9,17 @@ public class Reward implements Serializable{
     private static final long serialVersionUID = 1L;
 
     private int userId;
-    private int projectId;
     private double minAmount;
     private String description;
-
-    private double done;
+    private boolean done;
+    private int projectId;
+    private String projectName;
 
     public Reward() {
     }
 
-    public Reward(int userId, int projectId, double minAmount, String description) {
+    public Reward(int userId, double minAmount, String description) {
         this.userId = userId;
-        this.projectId = projectId;
         this.minAmount = minAmount;
         this.description = description;
     }
@@ -32,14 +31,6 @@ public class Reward implements Serializable{
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public int getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
     }
 
     public double getMinAmount() {
@@ -58,12 +49,28 @@ public class Reward implements Serializable{
         this.description = description;
     }
 
-    public double getDone() {
+    public boolean getDone() {
         return done;
     }
 
-    public void setDone(double done) {
+    public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     @Override
@@ -71,7 +78,6 @@ public class Reward implements Serializable{
         return "Reward{" +
                 "description='" + description + '\'' +
                 ", userId=" + userId +
-                ", projectId=" + projectId +
                 ", minAmount=" + minAmount +
                 ", done=" + done +
                 '}';

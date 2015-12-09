@@ -16,7 +16,7 @@ public class Connection extends Thread{
     private OnlineClientsReport allOnlineClientsReport;
 
     public Connection(Socket clientSocket, OnlineClientsReport allOnlineClientsReport) {
-        clientSession = new ClientSession();
+        clientSession = ClientSession.getInstance();
         this.allOnlineClientsReport = allOnlineClientsReport;
         try {
             this.clientSocket = clientSocket;
@@ -37,7 +37,7 @@ public class Connection extends Thread{
         allOnlineClientsReport.addClient(clientAddress, (clientUsername.equals("")) ? "Not logged in" : clientUsername, clientSocket);
         try {
             while(true) {
-                    handleClientCommand();
+                handleClientCommand();
             }
         } catch (IOException e) {
             handleIOException();
@@ -56,7 +56,7 @@ public class Connection extends Thread{
         String clientUsername = (clientSession.getUsernameLoggedIn().equals("")) ? "Not logged in" : clientSession.getUsernameLoggedIn();
 
         System.out.println("New request from " + clientSocket.getInetAddress().getHostAddress() + "(" + clientUsername + ")" + ": " + command.toString());
-        ClientCommand clientCommand = new ClientCommand(this, command, command.getAttachedObject(), clientSession);
+        ClientCommand clientCommand = new ClientCommand(this, command, command.getAttachedObject());
         clientCommand.run();
         ServerMessage commandResponse = clientCommand.getServerMessage();
         sendMessageToClient(commandResponse);
@@ -65,8 +65,6 @@ public class Connection extends Thread{
 
         allOnlineClientsReport.addClient(clientSocket.getInetAddress().getHostAddress(), clientSession.getUsernameLoggedIn(), clientSocket);
     }
-
-
 
 
     public Command readMessageFromClient() throws IOException{
@@ -85,17 +83,6 @@ public class Connection extends Thread{
         outputStream.writeObject(message);
     }
 
-    public Object readObjectFromClient() throws IOException{
-        Object object = null;
-
-        try {
-            object = (Object)inputStream.readObject();
-        } catch (ClassNotFoundException e) {
-            System.out.println("Class not found: " + e.getMessage());
-        }
-
-        return object;
-    }
 
     public OnlineClientsReport getAllOnlineClientsReport() {
         return allOnlineClientsReport;

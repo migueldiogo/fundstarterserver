@@ -4,7 +4,8 @@ package fundstarter;
  * Created by sergiopires on 15/10/15.
  */
 
-import java.rmi.*;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -26,7 +27,9 @@ public interface RMIInterface extends Remote {
 
     boolean addRewardToProject(Reward reward, int projectId) throws SQLException, RemoteException;
 
-    boolean addQuestionToProject(DecisionOption question, int projectId) throws  SQLException, RemoteException;
+    boolean addQuestionToProject(String question, int projectId) throws  SQLException, RemoteException;
+
+    boolean addOptionToProject(DecisionOption option, int projectId) throws  SQLException, RemoteException;
 
     boolean removeGoalFromProject(Goal goal, int projectId) throws SQLException, RemoteException;
 
@@ -46,7 +49,7 @@ public interface RMIInterface extends Remote {
 
     ArrayList<Message> getUserMessages(int userId) throws SQLException, RemoteException;
 
-    ArrayList<Project> gerExpiredProjects() throws SQLException, RemoteException;
+    ArrayList<Project> getExpiredProjects() throws SQLException, RemoteException;
 
     ArrayList<Project> getInProgressProjects() throws SQLException, RemoteException;
 
@@ -64,7 +67,7 @@ public interface RMIInterface extends Remote {
     //TODO for SD Project
     int loginWithTumblr(String username) throws SQLException, RemoteException;
 
-    // Não vai ser preciso
+    // TODO Apagar -  Não vai ser preciso
     boolean sendMessage(Message message) throws SQLException, RemoteException;
 
     boolean testRMIConnection() throws RemoteException;

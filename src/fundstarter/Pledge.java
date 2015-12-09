@@ -9,15 +9,16 @@ public class Pledge implements Serializable{
     private static final long serialVersionUID = 1L;
 
     private int pledgeId;
+    private String projectName;
     private int pledgerUsreId;
     private int projectId;
     private double amount;
-    private String decision;
+    private int decision;
 
     public Pledge() {
     }
 
-    public Pledge(int pledgerUsreId, int projectId, double amount, String decision) {
+    public Pledge(int pledgerUsreId, int projectId, double amount, int decision) {
         this.pledgerUsreId = pledgerUsreId;
         this.projectId = projectId;
         this.amount = amount;
@@ -32,11 +33,19 @@ public class Pledge implements Serializable{
         this.pledgeId = pledgeId;
     }
 
-    public int getPledgerUsreId() {
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public int getPledgerUserId() {
         return pledgerUsreId;
     }
 
-    public void setPledgerUsreId(int pledgerUsreId) {
+    public void setPledgerUserId(int pledgerUsreId) {
         this.pledgerUsreId = pledgerUsreId;
     }
 
@@ -56,11 +65,11 @@ public class Pledge implements Serializable{
         this.amount = amount;
     }
 
-    public String getDecision() {
+    public int getDecision() {
         return decision;
     }
 
-    public void setDecision(String decision) {
+    public void setDecision(int decision) {
         this.decision = decision;
     }
 

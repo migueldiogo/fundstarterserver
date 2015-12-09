@@ -1,7 +1,7 @@
 package fundstarter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by sergiopires on 26/10/15.
@@ -12,29 +12,38 @@ public class Project implements Serializable{
     private int projectId;
     private String name;
     private String description;
-    private String expirationDate;
-    private double firstGoal;
+    private Date expirationDate;
+    private double firstGoalValue;
     private double totalAmountEarned;
+    private String question;
 
     public Project() {
     }
 
-    public Project(String name, String description, String expirationDate, double firstGoal) {
+    public Project(String name, String description, Date expirationDate, double firstGoalValue) {
         this.name = name;
         this.description = description;
         this.expirationDate = expirationDate;
-        this.firstGoal = firstGoal;
+        this.firstGoalValue = firstGoalValue;
     }
 
-    public Project(int projectId, String name, String description, String expirationDate, double firstGoal, double totalAmountEarned) {
+    public Project(int projectId, String name, String description, Date expirationDate, double firstGoalValue, double totalAmountEarned) {
         this.projectId = projectId;
         this.name = name;
         this.description = description;
         this.expirationDate = expirationDate;
-        this.firstGoal = firstGoal;
+        this.firstGoalValue = firstGoalValue;
         this.totalAmountEarned = totalAmountEarned;
     }
 
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
 
     public String getName() {
         return name;
@@ -52,20 +61,20 @@ public class Project implements Serializable{
         this.description = description;
     }
 
-    public String getExpirationDate() {
+    public Date getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(String expirationDate) {
+    public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public double getFirstGoal() {
-        return firstGoal;
+    public double getFirstGoalValue() {
+        return firstGoalValue;
     }
 
-    public void setFirstGoal(double firstGoal) {
-        this.firstGoal = firstGoal;
+    public void setFirstGoalValue(double firstGoalValue) {
+        this.firstGoalValue = firstGoalValue;
     }
 
     public double getTotalAmountEarned() {
@@ -76,11 +85,17 @@ public class Project implements Serializable{
         this.totalAmountEarned = totalAmountEarned;
     }
 
-
     public double getPercentageOfProgress(){
-        return (totalAmountEarned/ firstGoal)*100;
+        return (totalAmountEarned/ firstGoalValue)*100;
     }
 
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
 
     @Override
     public String toString() {
@@ -88,7 +103,7 @@ public class Project implements Serializable{
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", expirationDate='" + expirationDate + '\'' +
-                ", firstGoal=" + firstGoal +
+                ", firstGoalValue=" + firstGoalValue +
                 ", totalAmountEarned=" + totalAmountEarned +
                 '}';
     }

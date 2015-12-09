@@ -9,16 +9,14 @@ public class Goal implements Serializable{
     private static final long serialVersionUID = 1L;
 
     private double amount;
-    private int projectId;
     private String extraDescription;
 
 
     public Goal() {
     }
 
-    public Goal(double amount, int projectId, String extraDescription) {
+    public Goal(double amount, String extraDescription) {
         this.amount = amount;
-        this.projectId = projectId;
         this.extraDescription = extraDescription;
     }
 
@@ -28,14 +26,6 @@ public class Goal implements Serializable{
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public int getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
     }
 
     public String getExtraDescription() {
@@ -50,7 +40,6 @@ public class Goal implements Serializable{
     public String toString() {
         return "Goal{" +
                 "amount=" + amount +
-                ", projectId=" + projectId +
                 ", extraDescription='" + extraDescription + '\'' +
                 '}';
     }

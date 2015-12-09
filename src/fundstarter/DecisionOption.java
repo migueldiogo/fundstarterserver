@@ -1,7 +1,6 @@
 package fundstarter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * Created by sergiopires on 26/10/15.
