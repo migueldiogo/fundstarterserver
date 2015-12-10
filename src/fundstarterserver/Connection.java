@@ -55,13 +55,13 @@ public class Connection extends Thread{
         Command command = readMessageFromClient();
         String clientUsername = (clientSession.getUsernameLoggedIn().equals("")) ? "Not logged in" : clientSession.getUsernameLoggedIn();
 
-        System.out.println("New request from " + clientSocket.getInetAddress().getHostAddress() + "(" + clientUsername + ")" + ": " + command.toString());
+        System.out.println("New request from " + clientSocket.getInetAddress().getHostAddress() + "(" + clientUsername + ")" + ": " + command);
         ClientCommand clientCommand = new ClientCommand(this, command, command.getAttachedObject());
         clientCommand.run();
         ServerMessage commandResponse = clientCommand.getServerMessage();
         sendMessageToClient(commandResponse);
 
-        System.out.println("Response to " + clientSocket.getInetAddress().getHostAddress() + "(" + clientUsername + ")" + ": " + commandResponse.toString());
+        System.out.println("Response to " + clientSocket.getInetAddress().getHostAddress() + "(" + clientUsername + ")" + ": " + commandResponse);
 
         allOnlineClientsReport.addClient(clientSocket.getInetAddress().getHostAddress(), clientSession.getUsernameLoggedIn(), clientSocket);
     }

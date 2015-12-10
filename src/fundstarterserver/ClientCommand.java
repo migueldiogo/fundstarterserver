@@ -103,7 +103,7 @@ public class ClientCommand {
                 case "getPledgesFromUser":
                     getPledgesFromUser();
                     break;
-                case "getRe/**/wardsFromUser":
+                case "getRewardsFromUser":
                     getRewardsFromUser();
                     break;
                 case "getProjectMessages":
@@ -167,7 +167,7 @@ public class ClientCommand {
     }
 
     void printDataServerResponse(Object object) {
-        System.out.println("[DataServer] " + object.toString());
+        System.out.println("[DataServer] " + object);
     }
 
 
@@ -230,40 +230,40 @@ public class ClientCommand {
     }
 
     private void addGoalToProject() throws SQLException, RemoteException {
-        boolean rmiReturnObject = remoteObject.addGoalToProject((Goal)attachedObject, Integer.parseInt(arguments.get(0)));
+        boolean rmiReturnObject = remoteObject.addGoalToProject((Goal)attachedObject, Integer.parseInt(arguments.get(0)), clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
         output.setContent("Goal added to project " + arguments.get(0) + ".");
         output.setErrorHappened(!rmiReturnObject);
     }
 
     private void addRewardToProject() throws SQLException, RemoteException {
-        boolean rmiReturnObject = remoteObject.addRewardToProject((Reward)attachedObject, Integer.parseInt(arguments.get(0)));
+        boolean rmiReturnObject = remoteObject.addRewardToProject((Reward)attachedObject, Integer.parseInt(arguments.get(0)), clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
         output.setContent("Reward added to project " + arguments.get(0) + ".");
     }
 
     // TODO no cliente
     private void addQuestionToProject() throws SQLException, RemoteException {
-        boolean rmiReturnObject = remoteObject.addQuestionToProject(arguments.get(0), Integer.parseInt(arguments.get(1)));
+        boolean rmiReturnObject = remoteObject.addQuestionToProject(arguments.get(0), Integer.parseInt(arguments.get(1)), clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
         output.setContent("Question added to project " + arguments.get(0) + ".");
     }
 
     // TODO no cliente
     private void addOptionToProject() throws SQLException, RemoteException {
-        boolean rmiReturnObject = remoteObject.addOptionToProject((DecisionOption)attachedObject, Integer.parseInt(arguments.get(0)));
+        boolean rmiReturnObject = remoteObject.addOptionToProject((DecisionOption)attachedObject, Integer.parseInt(arguments.get(0)), clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
         output.setContent("Option added to project " + arguments.get(0) + ".");
     }
 
     private void removeGoalFromProject() throws SQLException, RemoteException {
-        boolean rmiReturnObject = remoteObject.removeGoalFromProject((Goal)attachedObject, Integer.parseInt(arguments.get(0)));
+        boolean rmiReturnObject = remoteObject.removeGoalFromProject((Goal)attachedObject, Integer.parseInt(arguments.get(0)), clientSession.getUserIDLoggedIn());
         System.out.println("DataServer Response: " + rmiReturnObject);
         output.setContent("Goal successfully removed from project.");
     }
 
     private void removeRewardFromProject() throws SQLException, RemoteException {
-        boolean rmiReturnObject = remoteObject.removeRewardFromProject(Integer.parseInt(arguments.get(0)));
+        boolean rmiReturnObject = remoteObject.removeRewardFromProject(Integer.parseInt(arguments.get(0)), clientSession.getUserIDLoggedIn(), Integer.parseInt(arguments.get(1)));
         System.out.println("DataServer Response: " + rmiReturnObject);
         output.setContent("Reward successfully removed from project.");
     }
@@ -271,57 +271,57 @@ public class ClientCommand {
     private void getProject() throws RemoteException, SQLException {
         Project rmiReturnObject = remoteObject.getProjectDetails(Integer.parseInt(arguments.get(0)));
         printDataServerResponse(rmiReturnObject);
-        output.setContent("Project successfully retrieved.");
+        output.setContent(rmiReturnObject);
     }
 
     // TODO no cliente
     private void getRewardsFromProject() throws RemoteException, SQLException {
         ArrayList<Reward> rmiReturnObject = remoteObject.getRewardsFromProject(Integer.parseInt(arguments.get(0)));
         printDataServerResponse(rmiReturnObject);
-        output.setContent("Rewards from project successfully retrieved.");
+        output.setContent(rmiReturnObject);
     }
 
     //TODO no cliente
     private void getGoalsFromProject() throws SQLException, RemoteException {
         ArrayList<Goal> rmiReturnObject = remoteObject.getGoalsFromProject(Integer.parseInt(arguments.get(0)));
         printDataServerResponse(rmiReturnObject);
-        output.setContent("Goals from project successfully retrieved.");
+        output.setContent(rmiReturnObject);
     }
 
     private void getPledgesFromUser() throws RemoteException, SQLException {
         ArrayList<Pledge> rmiReturnObject = remoteObject.getPledgesFromUser(clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
-        output.setContent("Pledges from user successfully retrieved.");
+        output.setContent(rmiReturnObject);
     }
 
     private void getRewardsFromUser() throws SQLException, RemoteException {
         ArrayList<Reward> rmiReturnObject = remoteObject.getRewardsFromUser(clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
-        output.setContent("Rewards from user successfully retrieved.");
+        output.setContent(rmiReturnObject);
     }
 
     private void getProjectMessages() throws RemoteException, SQLException {
         ArrayList<Message> rmiReturnObject = remoteObject.getProjectMessages(Integer.parseInt(arguments.get(0)), clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
-        output.setContent("Messages from project successfully retrieved.");
+        output.setContent(rmiReturnObject);
     }
 
     private void getUserMessages() throws SQLException, RemoteException {
         ArrayList<Message> rmiReturnObject = remoteObject.getUserMessages(clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
-        output.setContent("Messages from user successfully retrieved.");
+        output.setContent(rmiReturnObject);
     }
 
     private void getExpiredProjects() throws SQLException, RemoteException {
         ArrayList<Project> rmiReturnObject = remoteObject.getExpiredProjects();
         printDataServerResponse(rmiReturnObject);
-        output.setContent("Expired projects successfully retrieved.");
+        output.setContent(rmiReturnObject);
     }
 
     private void getInProgressProjects() throws SQLException, RemoteException {
         ArrayList<Project> rmiReturnObject = remoteObject.getInProgressProjects();
         printDataServerResponse(rmiReturnObject);
-        output.setContent("In progress projects successfully retrieved.");
+        output.setContent(rmiReturnObject);
     }
 
     // TODO pensar se nao sera melhor o projeto estar em client session

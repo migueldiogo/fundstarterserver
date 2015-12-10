@@ -23,17 +23,17 @@ public interface RMIInterface extends Remote {
 
     boolean addAdminToProject(String usernameToPromote, int projectId, int currentUserId)  throws SQLException, RemoteException;
 
-    boolean addGoalToProject(Goal goal, int projectId) throws SQLException, RemoteException;
+    boolean addGoalToProject(Goal goal, int projectId, int currentUserId) throws SQLException, RemoteException;
 
-    boolean addRewardToProject(Reward reward, int projectId) throws SQLException, RemoteException;
+    boolean addRewardToProject(Reward reward, int projectId, int currentUserId) throws SQLException, RemoteException;
 
-    boolean addQuestionToProject(String question, int projectId) throws  SQLException, RemoteException;
+    boolean addQuestionToProject(String question, int projectId, int currentUserId) throws  SQLException, RemoteException;
 
-    boolean addOptionToProject(DecisionOption option, int projectId) throws  SQLException, RemoteException;
+    boolean addOptionToProject(DecisionOption option, int projectId, int currentUserId) throws  SQLException, RemoteException;
 
-    boolean removeGoalFromProject(Goal goal, int projectId) throws SQLException, RemoteException;
+    boolean removeGoalFromProject(Goal goal, int projectId, int currentUserId) throws SQLException, RemoteException;
 
-    boolean removeRewardFromProject(int rewardId) throws SQLException, RemoteException;
+    boolean removeRewardFromProject(int rewardId, int currentUserId, int projectId) throws SQLException, RemoteException;
 
     Project getProjectDetails(int projectId) throws RemoteException, SQLException;
 
@@ -48,6 +48,8 @@ public interface RMIInterface extends Remote {
     ArrayList<Message> getProjectMessages(int projectId, int userId) throws RemoteException, SQLException;
 
     ArrayList<Message> getUserMessages(int userId) throws SQLException, RemoteException;
+
+    ArrayList<DecisionOption> getProjectOptions(int projectId) throws SQLException, RemoteException;
 
     ArrayList<Project> getExpiredProjects() throws SQLException, RemoteException;
 
