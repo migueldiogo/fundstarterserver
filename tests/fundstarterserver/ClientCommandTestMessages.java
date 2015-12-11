@@ -125,11 +125,11 @@ public class ClientCommandTestMessages{
 
 
         //sendMessageToUser
-        message = new Message();
-        message.setProjectId(project.getProjectId());
-        message.setText("OlaResposta");
-        message.setPledgerUserId(userId2);
-        clientCommand = new ClientCommand(new Command("sendMessageFromProject", new ArrayList<>()), message);
+        Message message2 = new Message();
+        message2.setProjectId(project.getProjectId());
+        message2.setText("OlaResposta");
+        message2.setPledgerUserId(userId2);
+        clientCommand = new ClientCommand(new Command("sendMessageFromProject", new ArrayList<>()), message2);
         clientCommand.run();
         assertTrue(!clientCommand.getServerMessage().isErrorHappened());
 
@@ -153,11 +153,16 @@ public class ClientCommandTestMessages{
         clientCommand.run();
         messages = (ArrayList<Message>) clientCommand.getServerMessage().getContent();
         assertTrue(!clientCommand.getServerMessage().isErrorHappened());
-        assertTrue(messages.get(0).getText().equals(message.getText()));
+        assertTrue(messages.get(0).getText().equals(message2.getText()));
         assertTrue(messages.get(0).getPledgerUserId() == userId2);
         assertTrue(messages.get(0).getProjectId() == project.getProjectId());
         assertTrue(messages.get(0).getMessageId() > 0);
         assertTrue(messages.get(0).isMessageFromProject());
+        assertTrue(messages.get(1).getText().equals(message.getText()));
+        assertTrue(messages.get(1).getPledgerUserId() == userId2);
+        assertTrue(messages.get(1).getProjectId() == project.getProjectId());
+        assertTrue(messages.get(1).getMessageId() > 0);
+        assertTrue(!messages.get(1).isMessageFromProject());
 
 
 
