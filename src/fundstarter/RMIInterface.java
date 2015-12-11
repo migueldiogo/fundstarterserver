@@ -25,11 +25,19 @@ public interface RMIInterface extends Remote {
 
     boolean addGoalToProject(Goal goal, int projectId, int currentUserId) throws SQLException, RemoteException;
 
+    //void addGoalToProjectWithOutCommit(Goal goal, int projectId, int currentUserId) throws SQLException, RemoteException;
+
     boolean addRewardToProject(Reward reward, int projectId, int currentUserId) throws SQLException, RemoteException;
+
+    //void addRewardToProjectWithOutCommit(Reward reward, int projectId) throws SQLException, RemoteException;
 
     boolean addQuestionToProject(String question, int projectId, int currentUserId) throws  SQLException, RemoteException;
 
+    //void addQuestionToProjectWithOutCommit(String question, int projectId) throws  SQLException, RemoteException;
+
     boolean addOptionToProject(DecisionOption option, int projectId, int currentUserId) throws  SQLException, RemoteException;
+
+    //void addOptionToProjectWithOutCommit(DecisionOption option, int projectId) throws  SQLException, RemoteException;
 
     boolean removeGoalFromProject(Goal goal, int projectId, int currentUserId) throws SQLException, RemoteException;
 
@@ -49,17 +57,15 @@ public interface RMIInterface extends Remote {
 
     ArrayList<Message> getUserMessages(int userId) throws SQLException, RemoteException;
 
-    ArrayList<DecisionOption> getProjectOptions(int projectId) throws SQLException, RemoteException;
-
     ArrayList<Project> getExpiredProjects() throws SQLException, RemoteException;
 
     ArrayList<Project> getInProgressProjects() throws SQLException, RemoteException;
 
-    boolean sendMessageFromProject(Message message) throws SQLException, RemoteException;
+    ArrayList<DecisionOption> getProjectOptions(int projectId) throws SQLException, RemoteException;
 
-    boolean sendMessageToProject(Message message) throws SQLException, RemoteException;
+    boolean sendMessage(Message message, boolean isMessageFromProject, int currentUserId) throws SQLException, RemoteException;
 
-    boolean sendRewardToUser(int pledgeId, int rewardId, int toUserId) throws SQLException, RemoteException;
+    boolean sendRewardToUser(int currentUserId, int pledgeId, String toUsername) throws SQLException, RemoteException;
 
     boolean pledge(Pledge pledge) throws SQLException, RemoteException;
 
@@ -68,9 +74,6 @@ public interface RMIInterface extends Remote {
 
     //TODO for SD Project
     int loginWithTumblr(String username) throws SQLException, RemoteException;
-
-    // TODO Apagar -  Não vai ser preciso
-    boolean sendMessage(Message message) throws SQLException, RemoteException;
 
     boolean testRMIConnection() throws RemoteException;
 }

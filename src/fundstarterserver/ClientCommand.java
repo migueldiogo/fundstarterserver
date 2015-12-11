@@ -8,6 +8,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,13 +31,28 @@ public class ClientCommand {
     private Object attachedObject;
     private ClientSession clientSession;
 
+
+    public ClientCommand(Command rawCommand, Object attachedObject) {
+        rawCommand.getCommand();
+        this.command = new String(rawCommand.getCommand());
+        this.attachedObject = attachedObject;
+        this.output = new ServerMessage();
+        this.arguments = new ArrayList<>();
+
+        for (String argument : rawCommand.getArguments())
+            arguments.add(argument);
+
+        clientSession = ClientSession.getInstance();
+    }
+
+
     public ClientCommand(Connection connection, Command rawCommand, Object attachedObject) {
         rawCommand.getCommand();
         this.connection = connection;
         this.command = new String(rawCommand.getCommand());
         this.attachedObject = attachedObject;
         this.output = new ServerMessage();
-        this.arguments = new ArrayList<String>();
+        this.arguments = new ArrayList<>();
 
         for (String argument : rawCommand.getArguments())
             arguments.add(argument);
@@ -117,6 +133,9 @@ public class ClientCommand {
                     break;
                 case "getInProgressProjects":
                     getInProgressProjects();
+                    break;
+                case "getProjectOptions":
+                    getProjectOptions();
                     break;
                 case "sendMessageFromProject":
                     sendMessageFromProject();
@@ -324,12 +343,18 @@ public class ClientCommand {
         output.setContent(rmiReturnObject);
     }
 
+    private void getProjectOptions() throws SQLException, RemoteException {
+        ArrayList<DecisionOption> rmiReturnObject = remoteObject.getProjectOptions(Integer.parseInt(arguments.get(0)));
+        printDataServerResponse(rmiReturnObject);
+        output.setContent(rmiReturnObject);
+    }
+
     // TODO pensar se nao sera melhor o projeto estar em client session
     private void sendMessageFromProject() throws SQLException, RemoteException {
         Message message = (Message)attachedObject;
-        message.setDate(new Date());
+        message.setDateTime(new Timestamp(new Date().getTime()));
 
-        boolean rmiReturnObject = remoteObject.sendMessageFromProject(message);
+        boolean rmiReturnObject = remoteObject.sendMessage(message, true, clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
         output.setContent("Message from project successfully sent.");
     }
@@ -337,16 +362,16 @@ public class ClientCommand {
     // TODO pensar se nao sera melhor o projeto estar em client session
     private void sendMessageToProject() throws SQLException, RemoteException {
         Message message = (Message)attachedObject;
-        message.setDate(new Date());
+        message.setDateTime(new Timestamp(new Date().getTime()));
         message.setPledgerUserId(clientSession.getUserIDLoggedIn());
 
-        boolean rmiReturnObject = remoteObject.sendMessageFromProject(message);
+        boolean rmiReturnObject = remoteObject.sendMessage(message, false, clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
         output.setContent("Message to project successfully sent.");
     }
 
     private void sendRewardToUser() throws SQLException, RemoteException {
-        boolean rmiReturnObject = remoteObject.sendRewardToUser(Integer.parseInt(arguments.get(0)), Integer.parseInt(arguments.get(1)), Integer.parseInt(arguments.get(2)));
+        boolean rmiReturnObject = remoteObject.sendRewardToUser(clientSession.getUserIDLoggedIn(), Integer.parseInt(arguments.get(0)), arguments.get(1));
         printDataServerResponse(rmiReturnObject);
         output.setContent("Reward successfully sent to user.");
     }
@@ -426,6 +451,9 @@ public class ClientCommand {
     public ServerMessage getServerMessage() {
         return output;
     }
+
+
+
 
 
 
