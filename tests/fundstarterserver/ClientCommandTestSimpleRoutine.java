@@ -290,7 +290,7 @@ public class ClientCommandTestSimpleRoutine {
         assertTrue(reward.getDescription().equals("Gelado") && reward.getProjectId() == project.getProjectId() &&
                 reward.getMinAmount() == 50 && !reward.isDone() && reward.getUserId() == ClientSession.getInstance().getUserIDLoggedIn());
 
-/*
+
         //removeRewardFromProject
         arguments = new ArrayList<>();
         arguments.add("" + reward.getRewardId());
@@ -331,7 +331,7 @@ public class ClientCommandTestSimpleRoutine {
         if (m.find())
             assertTrue(100 == Integer.parseInt(m.group(1)));
         assertTrue(!clientCommand.getServerMessage().isErrorHappened());
-*/
+
 
          /*       //addReward to remove
         arguments = new ArrayList<>();
@@ -354,7 +354,7 @@ public class ClientCommandTestSimpleRoutine {
         assertTrue(reward.getDescription().equals("2 Gelados") && reward.getProjectId() == project.getProjectId() &&
                 reward.getMinAmount() == 100);*/
 
-/*
+
 
         //cancelaProjeto
         arguments = new ArrayList<>();
@@ -373,7 +373,7 @@ public class ClientCommandTestSimpleRoutine {
             assertTrue(100 == Integer.parseInt(m.group(1)));
         assertTrue(!clientCommand.getServerMessage().isErrorHappened());
 
-*/
+
 
     }
 
