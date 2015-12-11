@@ -95,10 +95,10 @@ public class ClientCommand {
                 case "addRewardToProject":
                     addRewardToProject();
                     break;
-                case "addQuestionToProject":           //TODO no cliente
+                case "addQuestionToProject":
                     addQuestionToProject();
                     break;
-                case "addOptionToProject":             //TODO no cliente
+                case "addOptionToProject":
                     addOptionToProject();
                     break;
                 case "removeGoalFromProject":
@@ -110,10 +110,10 @@ public class ClientCommand {
                 case "getProject":
                     getProject();
                     break;
-                case "getRewardsFromProject":           //TODO no cliente
+                case "getRewardsFromProject":
                     getRewardsFromProject();
                     break;
-                case "getGoalsFromProject":             //TODO no cliente
+                case "getGoalsFromProject":
                     getGoalsFromProject();
                     break;
                 case "getPledgesFromUser":
@@ -261,14 +261,12 @@ public class ClientCommand {
         output.setContent("Reward added to project " + arguments.get(0) + ".");
     }
 
-    // TODO no cliente
     private void addQuestionToProject() throws SQLException, RemoteException {
         boolean rmiReturnObject = remoteObject.addQuestionToProject(arguments.get(0), Integer.parseInt(arguments.get(1)), clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
         output.setContent("Question added to project " + arguments.get(0) + ".");
     }
 
-    // TODO no cliente
     private void addOptionToProject() throws SQLException, RemoteException {
         boolean rmiReturnObject = remoteObject.addOptionToProject((DecisionOption)attachedObject, Integer.parseInt(arguments.get(0)), clientSession.getUserIDLoggedIn());
         printDataServerResponse(rmiReturnObject);
@@ -281,7 +279,6 @@ public class ClientCommand {
         output.setContent("Goal successfully removed from project.");
     }
 
-    //TODO verificar com cliente e dataserver
     private void removeRewardFromProject() throws SQLException, RemoteException {
         boolean rmiReturnObject = remoteObject.removeRewardFromProject(Integer.parseInt(arguments.get(0)), clientSession.getUserIDLoggedIn(), Integer.parseInt(arguments.get(1)));
         System.out.println("DataServer Response: " + rmiReturnObject);
@@ -294,14 +291,12 @@ public class ClientCommand {
         output.setContent(rmiReturnObject);
     }
 
-    // TODO no cliente
     private void getRewardsFromProject() throws RemoteException, SQLException {
         ArrayList<Reward> rmiReturnObject = remoteObject.getRewardsFromProject(Integer.parseInt(arguments.get(0)));
         printDataServerResponse(rmiReturnObject);
         output.setContent(rmiReturnObject);
     }
 
-    //TODO no cliente
     private void getGoalsFromProject() throws SQLException, RemoteException {
         ArrayList<Goal> rmiReturnObject = remoteObject.getGoalsFromProject(Integer.parseInt(arguments.get(0)));
         printDataServerResponse(rmiReturnObject);
@@ -350,7 +345,6 @@ public class ClientCommand {
         output.setContent(rmiReturnObject);
     }
 
-    // TODO melhorar o conceito cliente-servidor
     private void sendMessageFromProject() throws SQLException, RemoteException {
         Message message = (Message)attachedObject;
         message.setDateTime(new Timestamp(new Date().getTime()));
