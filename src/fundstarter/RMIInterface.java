@@ -25,23 +25,17 @@ public interface RMIInterface extends Remote {
 
     boolean addGoalToProject(Goal goal, int projectId, int currentUserId) throws SQLException, RemoteException;
 
-    //void addGoalToProjectWithOutCommit(Goal goal, int projectId, int currentUserId) throws SQLException, RemoteException;
-
     boolean addRewardToProject(Reward reward, int projectId, int currentUserId) throws SQLException, RemoteException;
-
-    //void addRewardToProjectWithOutCommit(Reward reward, int projectId) throws SQLException, RemoteException;
 
     boolean addQuestionToProject(String question, int projectId, int currentUserId) throws  SQLException, RemoteException;
 
-    //void addQuestionToProjectWithOutCommit(String question, int projectId) throws  SQLException, RemoteException;
-
     boolean addOptionToProject(DecisionOption option, int projectId, int currentUserId) throws  SQLException, RemoteException;
-
-    //void addOptionToProjectWithOutCommit(DecisionOption option, int projectId) throws  SQLException, RemoteException;
 
     boolean removeGoalFromProject(Goal goal, int projectId, int currentUserId) throws SQLException, RemoteException;
 
     boolean removeRewardFromProject(int rewardId, int currentUserId, int projectId) throws SQLException, RemoteException;
+
+    boolean removeUser(String username) throws SQLException, RemoteException;
 
     Project getProjectDetails(int projectId) throws RemoteException, SQLException;
 

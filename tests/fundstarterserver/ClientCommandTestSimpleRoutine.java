@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Miguel Prata Leal on 18/10/15.
  */
-public class ClientCommandTest {
+public class ClientCommandTestSimpleRoutine {
 
     @Before
     public void setUp() throws Exception {
@@ -58,6 +58,8 @@ public class ClientCommandTest {
 
         clientCommand = new ClientCommand(new Command("login", arguments), null);
         clientCommand.run();
+
+
     }
 
 
@@ -133,6 +135,11 @@ public class ClientCommandTest {
         clientCommand.run();
         assertTrue(!clientCommand.getServerMessage().isErrorHappened());
 
+        // TODO GET OPTIONS
+
+
+
+
         //addReward
         arguments = new ArrayList<>();
         arguments.add("" + project.getProjectId());
@@ -160,7 +167,6 @@ public class ClientCommandTest {
         clientCommand = new ClientCommand(new Command("pledge", new ArrayList<>()), pledge);
         clientCommand.run();
         assertTrue(!clientCommand.getServerMessage().isErrorHappened());
-
 
 
         //getOption
@@ -253,7 +259,7 @@ public class ClientCommandTest {
 
 
 
-        //removeRewardFromProject
+        //removeRewardFrom
         // TODO
 
 
@@ -285,6 +291,23 @@ public class ClientCommandTest {
                 reward.getMinAmount() == 50 && !reward.isDone() && reward.getUserId() == ClientSession.getInstance().getUserIDLoggedIn());
 
 
+        //removeRewardFromProject
+        arguments = new ArrayList<>();
+        arguments.add("" + reward.getRewardId());
+        arguments.add("" + project.getProjectId());
+        clientCommand = new ClientCommand(new Command("removeRewardFromProject", arguments), null);
+        clientCommand.run();
+        assertTrue(!clientCommand.getServerMessage().isErrorHappened());
+
+
+        //getReward
+        arguments = new ArrayList<>();
+        arguments.add("" + project.getProjectId());
+        clientCommand = new ClientCommand(new Command("getRewardsFromProject", arguments), null);
+        clientCommand.run();
+        assertTrue(clientCommand.getServerMessage().isErrorHappened());
+
+
 
         //logout user1
         clientCommand = new ClientCommand(new Command("logout", new ArrayList<>()), null);
@@ -299,6 +322,38 @@ public class ClientCommandTest {
 
         clientCommand = new ClientCommand(new Command("login", arguments), null);
         clientCommand.run();
+
+        //checkBalance
+        clientCommand = new ClientCommand(new Command("getBalance", new ArrayList<>()), null);
+        clientCommand.run();
+        p = Pattern.compile("(\\d+)");
+        m = p.matcher((String)clientCommand.getServerMessage().getContent());
+        if (m.find())
+            assertTrue(100 == Integer.parseInt(m.group(1)));
+        assertTrue(!clientCommand.getServerMessage().isErrorHappened());
+
+
+         /*       //addReward to remove
+        arguments = new ArrayList<>();
+        arguments.add("" + project.getProjectId());
+        reward = new Reward();
+        reward.setProjectId(project.getProjectId());
+        reward.setDescription("2 Gelados");
+        reward.setMinAmount(100);
+        clientCommand = new ClientCommand(new Command("addRewardToProject", arguments), reward);
+        clientCommand.run();
+        assertTrue(!clientCommand.getServerMessage().isErrorHappened());
+*/
+/*        //getReward
+        arguments = new ArrayList<>();
+        arguments.add("" + project.getProjectId());
+        clientCommand = new ClientCommand(new Command("getRewardsFromProject", arguments), null);
+        clientCommand.run();
+        rewards = (ArrayList<Reward>) clientCommand.getServerMessage().getContent();
+        reward = rewards.get(1);
+        assertTrue(reward.getDescription().equals("2 Gelados") && reward.getProjectId() == project.getProjectId() &&
+                reward.getMinAmount() == 100);*/
+
 
 
         //cancelaProjeto

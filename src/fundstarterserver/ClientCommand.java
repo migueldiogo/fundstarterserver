@@ -281,6 +281,7 @@ public class ClientCommand {
         output.setContent("Goal successfully removed from project.");
     }
 
+    //TODO verificar com cliente e dataserver
     private void removeRewardFromProject() throws SQLException, RemoteException {
         boolean rmiReturnObject = remoteObject.removeRewardFromProject(Integer.parseInt(arguments.get(0)), clientSession.getUserIDLoggedIn(), Integer.parseInt(arguments.get(1)));
         System.out.println("DataServer Response: " + rmiReturnObject);
@@ -349,7 +350,7 @@ public class ClientCommand {
         output.setContent(rmiReturnObject);
     }
 
-    // TODO pensar se nao sera melhor o projeto estar em client session
+    // TODO melhorar o conceito cliente-servidor
     private void sendMessageFromProject() throws SQLException, RemoteException {
         Message message = (Message)attachedObject;
         message.setDateTime(new Timestamp(new Date().getTime()));
@@ -359,7 +360,6 @@ public class ClientCommand {
         output.setContent("Message from project successfully sent.");
     }
 
-    // TODO pensar se nao sera melhor o projeto estar em client session
     private void sendMessageToProject() throws SQLException, RemoteException {
         Message message = (Message)attachedObject;
         message.setDateTime(new Timestamp(new Date().getTime()));
