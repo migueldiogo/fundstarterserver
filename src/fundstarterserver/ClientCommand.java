@@ -374,7 +374,7 @@ public class ClientCommand {
         Pledge pledge = (Pledge)attachedObject;
         pledge.setPledgerUserId(clientSession.getUserIDLoggedIn());
 
-        boolean rmiReturnObject = remoteObject.pledge(pledge);
+        boolean rmiReturnObject = remoteObject.pledge(pledge, false);
         printDataServerResponse(rmiReturnObject);
         output.setContent("You have successfully pledged this project.");
     }

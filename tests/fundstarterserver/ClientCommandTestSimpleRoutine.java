@@ -289,7 +289,7 @@ public class ClientCommandTestSimpleRoutine {
         reward = rewards.get(0);
         assertTrue(reward.getDescription().equals("Gelado") && reward.getProjectId() == project.getProjectId() &&
                 reward.getMinAmount() == 50 && !reward.isDone() && reward.getUserId() == ClientSession.getInstance().getUserIDLoggedIn());
-
+/*
 
         //removeRewardFromProject
         arguments = new ArrayList<>();
@@ -307,7 +307,7 @@ public class ClientCommandTestSimpleRoutine {
         clientCommand.run();
         assertTrue(clientCommand.getServerMessage().isErrorHappened());
 
-
+*/
 
         //logout user1
         clientCommand = new ClientCommand(new Command("logout", new ArrayList<>()), null);
@@ -354,7 +354,7 @@ public class ClientCommandTestSimpleRoutine {
         assertTrue(reward.getDescription().equals("2 Gelados") && reward.getProjectId() == project.getProjectId() &&
                 reward.getMinAmount() == 100);*/
 
-
+/*
 
         //cancelaProjeto
         arguments = new ArrayList<>();
@@ -363,7 +363,7 @@ public class ClientCommandTestSimpleRoutine {
         clientCommand = new ClientCommand(new Command("cancelProject", arguments), null);
         clientCommand.run();
         assertTrue(!clientCommand.getServerMessage().isErrorHappened());
-
+*/
         //checkBalanceAgain
         clientCommand = new ClientCommand(new Command("getBalance", new ArrayList<>()), null);
         clientCommand.run();
